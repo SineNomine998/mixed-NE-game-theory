@@ -1,0 +1,1022 @@
+<title>The Indifference Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,500;0,600;0,700;1,400&family=Libre+Franklin:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --bg:      #f0f1f3;
+    --card:    #ffffff;
+    --sunk:    #f2f4f6;
+    --ink:     #151d26;
+    --ink-2:   #5a6875;
+    --ink-3:   #8a97a3;
+    --line:    #dde2e8;
+    --line-2:  #c3ccd5;
+    --you:     #b4530b;
+    --you-bg:  #fdf0e2;
+    --them:    #23666a;
+    --them-bg: #e0eded;
+    --good:    #1d6b42;
+    --good-bg: #e2f2e8;
+    --bad:     #9c2f2a;
+    --bad-bg:  #fae3e1;
+    --lift:    0 1px 2px rgba(21,29,38,.05), 0 10px 30px -18px rgba(21,29,38,.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:      #0f151b;
+      --card:    #171f27;
+      --sunk:    #131a21;
+      --ink:     #e8eef4;
+      --ink-2:   #a6b4c0;
+      --ink-3:   #788794;
+      --line:    #28343f;
+      --line-2:  #3b4a57;
+      --you:     #e89d55;
+      --you-bg:  #34240f;
+      --them:    #5fb8b2;
+      --them-bg: #12302f;
+      --good:    #6cc08d;
+      --good-bg: #16301f;
+      --bad:     #e5837c;
+      --bad-bg:  #331a18;
+      --lift:    0 1px 2px rgba(0,0,0,.3), 0 12px 32px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:      #0f151b;
+    --card:    #171f27;
+    --sunk:    #131a21;
+    --ink:     #e8eef4;
+    --ink-2:   #a6b4c0;
+    --ink-3:   #788794;
+    --line:    #28343f;
+    --line-2:  #3b4a57;
+    --you:     #e89d55;
+    --you-bg:  #34240f;
+    --them:    #5fb8b2;
+    --them-bg: #12302f;
+    --good:    #6cc08d;
+    --good-bg: #16301f;
+    --bad:     #e5837c;
+    --bad-bg:  #331a18;
+    --lift:    0 1px 2px rgba(0,0,0,.3), 0 12px 32px -18px rgba(0,0,0,.8);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Libre Franklin', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'Zilla Slab', Georgia, serif; margin: 0; font-weight: 600; text-wrap: balance; }
+  p { margin: 0; }
+  .num { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 660px; margin: 0 auto; padding-inline: 18px; padding-block: 24px 56px; }
+
+  /* ---------- masthead ---------- */
+  .top { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .top h1 { font-size: 21px; letter-spacing: -.01em; }
+  .hud { display: flex; gap: 16px; font-size: 12px; color: var(--ink-3); }
+  .hud b { color: var(--ink); font-size: 15px; font-weight: 600; }
+  .lede { color: var(--ink-2); font-size: 14px; max-width: 46ch; margin-bottom: 20px; }
+
+  /* ---------- game picker ---------- */
+  .games { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+  .games button {
+    font: inherit; font-size: 12.5px; cursor: pointer; color: var(--ink-2);
+    background: transparent; border: 1px solid var(--line-2); border-radius: 100px;
+    padding: 5px 13px;
+  }
+  .games button:hover { color: var(--ink); border-color: var(--ink-3); }
+  .games button[aria-current="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); font-weight: 500; }
+
+  /* ---------- card ---------- */
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+    padding: 22px; box-shadow: var(--lift);
+  }
+  .card + .card { margin-top: 14px; }
+  .enter { animation: rise .32s cubic-bezier(.2,.7,.3,1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .kicker {
+    font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 7px;
+  }
+  .setup { color: var(--ink-2); font-size: 14px; margin-bottom: 18px; max-width: 52ch; }
+  .setup b { color: var(--ink); font-weight: 600; }
+
+  .q { font-size: 22px; line-height: 1.25; margin-bottom: 4px; }
+  .q-sub { color: var(--ink-2); font-size: 14px; margin-bottom: 18px; max-width: 50ch; }
+
+  /* ---------- payoff grid ---------- */
+  .grid-wrap { overflow-x: auto; margin-bottom: 10px; }
+  table.grid { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 340px; }
+  table.grid th, table.grid td { padding: 0; border: 1px solid var(--line); }
+  table.grid thead th {
+    font: 600 12.5px 'Libre Franklin', sans-serif; color: var(--them);
+    padding: 8px 10px; text-align: left; background: var(--sunk); vertical-align: top;
+  }
+  table.grid tbody th {
+    font: 600 12.5px 'Libre Franklin', sans-serif; color: var(--you);
+    padding: 8px 10px; text-align: left; background: var(--sunk); width: 30%; vertical-align: top;
+  }
+  table.grid .sub { display: block; font-weight: 400; font-size: 10.5px; color: var(--ink-3); margin-top: 1px; }
+  td.nw { background: var(--sunk); padding: 8px 10px !important; }
+  td.nw span { display: block; font-size: 10px; letter-spacing: .04em; white-space: nowrap; }
+  td.nw .a { color: var(--them); text-align: right; }
+  td.nw .b { color: var(--you); margin-top: 8px; }
+
+  td.box { height: 58px; cursor: pointer; position: relative; }
+  td.box .in { display: flex; align-items: center; justify-content: center; gap: 9px; height: 100%; }
+  td.box .mine  { color: var(--you);  font-size: 19px; font-weight: 600; }
+  td.box .yours { color: var(--them); font-size: 14px; }
+  td.box .slash { color: var(--line-2); }
+  td.box:hover, td.box.on { background: var(--you-bg); }
+  td.box.lit { background: var(--you-bg); box-shadow: inset 0 0 0 2px var(--you); }
+
+  .key { font-size: 12px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 3px 14px; }
+  .key i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 5px; }
+  .read {
+    margin-top: 10px; padding: 9px 12px; border-radius: 4px; background: var(--sunk);
+    font-size: 13px; color: var(--ink-2); min-height: 38px;
+  }
+  .read b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- inputs ---------- */
+  .asks { display: grid; gap: 16px; margin-bottom: 16px; }
+  .ask { display: grid; gap: 7px; }
+  .ask-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 14px;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .tag.you  { color: var(--you);  background: var(--you-bg); }
+  .tag.them { color: var(--them); background: var(--them-bg); }
+  .ask-head strong { font-size: 15px; font-weight: 600; }
+  .ask-why { font-size: 13px; color: var(--ink-2); max-width: 52ch; }
+  input[type="text"] {
+    font: 500 17px 'IBM Plex Mono', monospace; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line-2); border-radius: 4px;
+    padding: 10px 12px; width: 100%; max-width: 190px;
+  }
+  input[type="text"]:focus { outline: 2px solid var(--you); outline-offset: 1px; border-color: var(--you); }
+
+  .btn {
+    font: 600 14px 'Libre Franklin', sans-serif; cursor: pointer;
+    background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
+    border-radius: 4px; padding: 10px 20px;
+  }
+  .btn:hover { opacity: .88; }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
+  .btn.ghost:hover { background: var(--sunk); opacity: 1; }
+  .btns { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+  .err { font-size: 13px; color: var(--bad); margin-top: 9px; }
+  :focus-visible { outline: 2px solid var(--you); outline-offset: 2px; }
+
+  /* ---------- the balance ---------- */
+  .bal { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 4px; }
+  .bal + .bal { margin-top: 18px; }
+  .bal-top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; margin-bottom: 12px; }
+  .bal-top .lbl { font-size: 13.5px; color: var(--ink-2); }
+  .bal-top .val { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 14px; }
+  .beam { display: grid; gap: 8px; }
+  .beam-row { display: grid; grid-template-columns: minmax(78px, 26%) 1fr auto; gap: 11px; align-items: center; }
+  .beam-name { font-size: 13px; color: var(--ink-2); }
+  .beam-track { height: 26px; background: var(--sunk); border-radius: 3px; overflow: hidden; }
+  .beam-fill {
+    display: block; height: 100%; width: 0; border-radius: 3px;
+    transition: width .75s cubic-bezier(.22,.75,.28,1);
+  }
+  .beam-fill.a { background: var(--you); }
+  .beam-fill.b { background: var(--them); }
+  .beam-row:nth-child(2) .beam-fill { transition-delay: .12s; }
+  .beam-val {
+    font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;
+    font-size: 14px; font-weight: 600; min-width: 48px; text-align: right;
+    opacity: 0; transition: opacity .3s ease .6s;
+  }
+  .bal.go .beam-val { opacity: 1; }
+  .verdict {
+    margin-top: 13px; padding: 10px 13px; border-radius: 4px; font-size: 13.5px;
+    border: 1px solid; opacity: 0; transform: translateY(4px);
+    transition: opacity .35s ease .75s, transform .35s ease .75s;
+  }
+  .bal.go .verdict { opacity: 1; transform: none; }
+  .verdict.ok { background: var(--good-bg); border-color: color-mix(in srgb, var(--good) 35%, transparent); color: var(--good); }
+  .verdict.near { background: var(--you-bg); border-color: color-mix(in srgb, var(--you) 35%, transparent); color: var(--you); }
+  .verdict.no { background: var(--bad-bg);  border-color: color-mix(in srgb, var(--bad) 35%, transparent);  color: var(--bad); }
+  .verdict b { font-weight: 600; }
+  .verdict span { color: var(--ink-2); }
+
+  /* ---------- choices ---------- */
+  .picks { display: grid; gap: 10px; }
+  .pick {
+    font: inherit; text-align: left; cursor: pointer; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line-2); border-radius: 5px;
+    padding: 14px 16px; display: grid; gap: 2px;
+  }
+  .pick:hover { border-color: var(--you); background: var(--you-bg); }
+  .pick b { font-family: 'Zilla Slab', serif; font-size: 17px; font-weight: 600; }
+  .pick span { font-size: 12.5px; color: var(--ink-3); }
+
+  /* ---------- result ---------- */
+  .out { text-align: center; padding: 6px 0 2px; }
+  .out .big {
+    font-family: 'Zilla Slab', serif; font-size: 40px; font-weight: 700; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .out.win .big { color: var(--good); }
+  .out.lose .big { color: var(--bad); }
+  .out .cap { font-size: 13.5px; color: var(--ink-2); margin-top: 7px; }
+  .race { display: grid; gap: 9px; margin: 18px 0 4px; }
+  .race-row { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; gap: 11px; align-items: center; font-size: 13px; }
+  .race-row .who { color: var(--ink-2); }
+  .race-row .who.me { color: var(--you); font-weight: 600; }
+  .race-track { height: 20px; background: var(--sunk); border-radius: 3px; overflow: hidden; }
+  .race-fill { display: block; height: 100%; width: 0; transition: width 1.1s cubic-bezier(.22,.75,.28,1); }
+  .race-fill.pos { background: var(--good); }
+  .race-fill.neg { background: var(--bad); }
+  .race-row .amt { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; font-size: 13.5px; min-width: 56px; text-align: right; }
+
+  .why { font-size: 14px; color: var(--ink-2); max-width: 54ch; }
+  .why b { color: var(--ink); font-weight: 600; }
+
+  details.fold { margin-top: 16px; }
+  details.fold summary { cursor: pointer; font-size: 13px; color: var(--ink-2); padding: 9px 0; border-top: 1px solid var(--line); }
+  details.fold summary:hover { color: var(--ink); }
+  .work {
+    background: var(--sunk); border-radius: 4px; padding: 13px 15px; margin-top: 10px; overflow-x: auto;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.8; white-space: nowrap;
+  }
+  .work .d { color: var(--ink-3); }
+  .work .me { color: var(--you); font-weight: 600; }
+  .work .th { color: var(--them); font-weight: 600; }
+  .work hr { border: 0; border-top: 1px solid var(--line-2); margin: 9px 0; }
+
+  .foot { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; font-size: 13px; color: var(--ink-2); }
+
+  .boot { background: var(--bad-bg); color: var(--bad); border: 1px solid var(--bad); padding: 14px; border-radius: 4px; font-family: monospace; font-size: 13px; }
+
+  @media (max-width: 520px) {
+    .q { font-size: 19px; }
+    .out .big { font-size: 33px; }
+    .card { padding: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .beam-val, .verdict { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>The Indifference Drill</h1>
+    <div class="hud">
+      <span>Score <b class="num" id="h-score">0</b></span>
+      <span>Streak <b class="num" id="h-streak">0</b></span>
+    </div>
+  </header>
+  <p class="lede">Find the number where your opponent's choice stops mattering. Then use it to beat them.</p>
+  <div class="games" id="games"></div>
+  <main id="app"></main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== exact fractions (payoffs are integers, so every answer is a ratio) ===== */
+  function gcd(a, b) { if (a < 0n) a = -a; if (b < 0n) b = -b; while (b) { const t = a % b; a = b; b = t; } return a; }
+  function F(n, d) {
+    if (!(this instanceof F)) return new F(n, d);
+    n = BigInt(n); d = d === undefined ? 1n : BigInt(d);
+    if (d === 0n) throw new Error('zero denominator');
+    if (d < 0n) { n = -n; d = -d; }
+    const g = gcd(n, d) || 1n;
+    this.n = n / g; this.d = d / g;
+  }
+  F.prototype.add = function (o) { return new F(this.n * o.d + o.n * this.d, this.d * o.d); };
+  F.prototype.sub = function (o) { return new F(this.n * o.d - o.n * this.d, this.d * o.d); };
+  F.prototype.mul = function (o) { return new F(this.n * o.n, this.d * o.d); };
+  F.prototype.div = function (o) { return new F(this.n * o.d, this.d * o.n); };
+  F.prototype.cmp = function (o) { const l = this.n * o.d, r = o.n * this.d; return l < r ? -1 : l > r ? 1 : 0; };
+  F.prototype.eq = function (o) { return this.cmp(o) === 0; };
+  F.prototype.lt = function (o) { return this.cmp(o) < 0; };
+  F.prototype.gt = function (o) { return this.cmp(o) > 0; };
+  F.prototype.val = function () { return Number(this.n) / Number(this.d); };
+  F.prototype.txt = function () { return this.d === 1n ? String(this.n) : this.n + '/' + this.d; };
+  F.prototype.pct = function () {
+    const v = this.val() * 100;
+    return (Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : v.toFixed(0)) + '%';
+  };
+  const ZERO = new F(0), ONE = new F(1);
+  const int = function (x) { return new F(BigInt(x)); };
+
+  const MINUS = '−';
+  const sg = function (x) { return x === 0 ? '0' : (x < 0 ? MINUS : '+') + Math.abs(x); };
+  const nt = function (x) { return x < 0 ? MINUS + Math.abs(x) : String(x); };
+  const ft = function (f) { return f.n < 0n ? MINUS + new F(-f.n, f.d).txt() : f.txt(); };
+  const fd = function (f, dp) { return f.val().toFixed(dp === undefined ? 2 : dp).replace('-', MINUS); };
+
+  /* a*x + b*(1-x) is the same as (a-b)x + b */
+  const lin = function (a, b) { return { m: a - b, c: b }; };
+  const at = function (L, x) { return int(L.m).mul(x).add(int(L.c)); };
+  function linTxt(L, v) {
+    if (L.m === 0) return nt(L.c);
+    const co = Math.abs(L.m) === 1 ? '' : String(Math.abs(L.m));
+    if (L.c === 0) return (L.m < 0 ? MINUS : '') + co + v;
+    return nt(L.c) + (L.m > 0 ? ' + ' : ' ' + MINUS + ' ') + co + v;
+  }
+  function rawTxt(a, b, v) {
+    const A = a < 0 ? '(' + nt(a) + ')' : String(a), B = b < 0 ? '(' + nt(b) + ')' : String(b);
+    return A + '·' + v + ' + ' + B + '·(1' + MINUS + v + ')';
+  }
+
+  /* ================= the games ================= */
+  /* Three, deliberately: one classic, one the students suggested, one where the
+     two players' payoffs are unrelated. Each fixes which side you play, so
+     there is no side selector to read. */
+
+  const GAMES = [
+    {
+      id: 'penalty',
+      tab: 'Penalty',
+      name: 'Penalty Shootout',
+      setup: 'You take the kick. <b>Vesna</b> has to throw herself at one side of the goal <b>before</b> she can see where the ball is going, so you are both choosing at the same moment. Your right foot is strong, so shots to the <b>right</b> are fast and accurate. Shots to the <b>left</b> are weak and slow. Left and right are from where you are standing.',
+      unit: 'goals per 10 kicks',
+      unitShort: 'goals',
+      totalDiv: 10,
+      you: 'row',
+      art: 'goal',
+      verb: { me: 'shoot', them: 'dive' },
+      short: { me: ['left', 'right'], them: ['left', 'right'] },
+      you_: 'You',
+      row: { name: 'You', actions: [
+        { name: 'Shoot left', sub: 'weak foot, slow' },
+        { name: 'Shoot right', sub: 'strong foot, fast' } ] },
+      col: { name: 'Vesna', actions: [
+        { name: 'Dive left', sub: '' },
+        { name: 'Dive right', sub: '' } ] },
+      A: [[2, 7], [9, 3]],
+      B: [[8, 3], [1, 7]],
+      note: 'Your right is so dangerous when she guesses wrong that Vesna has to dive right 7 times out of 11. That leaves your weak left side open often enough to be worth the worse shot, which is why you kick left slightly more than half the time.'
+    },
+    {
+      id: 'toss',
+      tab: 'Coin call',
+      name: 'The Loaded Toss',
+      setup: '<b>Deniz</b> slaps the coin down under his hand and can set which face is showing, so it is a choice, not a flip. You call out heads or tails at the same moment, before he lifts his hand. Match his face and you take the pot. The bookie pays more for a heads match than a tails match.',
+      unit: 'coins',
+      unitShort: 'coins',
+      you: 'row',
+      art: 'coin',
+      verb: { me: 'call', them: 'show' },
+      short: { me: ['heads', 'tails'], them: ['heads', 'tails'] },
+      row: { name: 'You', actions: [
+        { name: 'Call heads', sub: 'pays 3 on a match' },
+        { name: 'Call tails', sub: 'pays 1 on a match' } ] },
+      col: { name: 'Deniz', actions: [
+        { name: 'Shows heads', sub: '' },
+        { name: 'Shows tails', sub: '' } ] },
+      A: [[3, -2], [-1, 1]],
+      B: [[-3, 2], [1, -1]],
+      note: 'The game is worth 1/7 of a coin a toss to you. A real edge, but a thin one, which is why the mix has to be exact. Drift a few percent and it is gone.'
+    }
+  ];
+
+  /* ================= pictures of the situation =================
+     A percentage is an abstraction. These two things make it concrete: a
+     drawing of what the two choices physically are, and a tape of what a mix
+     actually looks like when it is played out round after round. */
+
+  function art(gm, shot, dive) {
+    const hi = function (on, c) { return on ? c : 'transparent'; };
+    if (gm.art === 'goal') {
+      return '<svg class="scene" viewBox="0 0 320 168" role="img" aria-label="A goal split into a left half and a right half">' +
+        '<rect x="24" y="86" width="132" height="46" fill="' + hi(dive === 0, 'var(--them)') + '" opacity=".22"/>' +
+        '<rect x="164" y="86" width="132" height="46" fill="' + hi(dive === 1, 'var(--them)') + '" opacity=".22"/>' +
+        '<rect x="24" y="28" width="132" height="58" fill="' + hi(dive === 0, 'var(--them)') + '" opacity=".22"/>' +
+        '<rect x="164" y="28" width="132" height="58" fill="' + hi(dive === 1, 'var(--them)') + '" opacity=".22"/>' +
+        '<g stroke="var(--line-2)" stroke-width="1" opacity=".75">' +
+        '<path d="M40 28V132M72 28V132M104 28V132M136 28V132M184 28V132M216 28V132M248 28V132M280 28V132"/>' +
+        '<path d="M24 52H296M24 76H296M24 100H296"/></g>' +
+        '<path d="M24 132V28H296V132" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/>' +
+        '<path d="M160 22V140" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/>' +
+        '<text x="90" y="62" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="17" font-weight="600" fill="var(--ink-2)">LEFT</text>' +
+        '<text x="230" y="62" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="17" font-weight="600" fill="var(--ink-2)">RIGHT</text>' +
+        '<circle cx="' + (shot === 0 ? 90 : shot === 1 ? 230 : 160) + '" cy="' + (shot === undefined || shot === null ? 152 : 110) + '" r="10" fill="var(--you)"/>' +
+        '<text x="160" y="164" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="12" fill="var(--ink-3)">' +
+        (shot === undefined || shot === null ? 'you kick from here' : 'the ball went there') + '</text>' +
+        '</svg>';
+    }
+    // coin
+    const face = function (cx, label, called, shown) {
+      return '<g>' +
+        '<circle cx="' + cx + '" cy="74" r="44" fill="' + (shown ? 'var(--them-bg)' : 'transparent') + '" stroke="' + (shown ? 'var(--them)' : 'var(--line-2)') + '" stroke-width="' + (shown ? 5 : 3) + '"/>' +
+        '<text x="' + cx + '" y="88" text-anchor="middle" font-family="\'Zilla Slab\',serif" font-size="40" font-weight="700" fill="' + (shown ? 'var(--them)' : 'var(--ink-3)') + '">' + label + '</text>' +
+        (called ? '<circle cx="' + cx + '" cy="74" r="56" fill="none" stroke="var(--you)" stroke-width="4" stroke-dasharray="7 6"/>' : '') +
+        '</g>';
+    };
+    return '<svg class="scene" viewBox="0 0 320 168" role="img" aria-label="A coin showing heads or tails">' +
+      face(86, 'H', shot === 0, dive === 0) + face(234, 'T', shot === 1, dive === 1) +
+      '<text x="160" y="160" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="12" fill="var(--ink-3)">' +
+      (shot === undefined || shot === null ? 'solid ring = what you called, filled coin = what he showed' : 'dashed ring = your call, filled coin = his face') + '</text>' +
+      '</svg>';
+  }
+
+  /* A run of rounds drawn as one square each, so "30%" becomes something you
+     can literally count. */
+  function drawFrom(mix, n) {
+    const out = [];
+    for (let k = 0; k < n; k++) out.push(Math.random() < mix ? 0 : 1);
+    return out;
+  }
+  function tape(seq, side, splitAt) {
+    const cells = seq.map(function (v, k) {
+      const mark = (splitAt !== undefined && k === splitAt) ? ' cut' : '';
+      return '<i class="' + side + (v === 0 ? '' : '2') + mark + '"></i>';
+    }).join('');
+    return '<div class="tape">' + cells + '</div>';
+  }
+  function tapeKey(g, side, names, seq) {
+    const a = seq.filter(function (v) { return v === 0; }).length;
+    return '<p class="tape-key"><span><i class="' + side + '"></i>' + esc(names[0]) + ' × ' + a + '</span>' +
+      '<span><i class="' + side + '2"></i>' + esc(names[1]) + ' × ' + (seq.length - a) + '</span></p>';
+  }
+
+  /* ================= solving ================= */
+
+  function seat(gm) {
+    if (gm.you === 'row') return { A: gm.A, B: gm.B, me: gm.row, them: gm.col };
+    return {
+      A: [[gm.B[0][0], gm.B[1][0]], [gm.B[0][1], gm.B[1][1]]],
+      B: [[gm.A[0][0], gm.A[1][0]], [gm.A[0][1], gm.A[1][1]]],
+      me: gm.col, them: gm.row
+    };
+  }
+
+  function pureNE(A, B) {
+    const out = [];
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++)
+      if (A[i][j] >= A[1 - i][j] && B[i][j] >= B[i][1 - j]) out.push([i, j]);
+    return out;
+  }
+
+  function solve(A, B) {
+    const qd = A[0][0] - A[0][1] - A[1][0] + A[1][1];
+    const pd = B[0][0] - B[1][0] - B[0][1] + B[1][1];
+    if (qd === 0 || pd === 0) throw new Error('no interior equilibrium');
+    const q = new F(A[1][1] - A[0][1], qd);
+    const p = new F(B[1][1] - B[1][0], pd);
+    if (!(p.gt(ZERO) && p.lt(ONE) && q.gt(ZERO) && q.lt(ONE))) throw new Error('equilibrium not interior');
+    return {
+      p: p, q: q,
+      mine: [lin(A[0][0], A[0][1]), lin(A[1][0], A[1][1])],   // my payoff per row, as a function of q
+      theirs: [lin(B[0][0], B[1][0]), lin(B[0][1], B[1][1])], // their payoff per column, as a function of p
+      vsCol: [lin(A[0][0], A[1][0]), lin(A[0][1], A[1][1])],  // my payoff vs each of their columns, as a function of p
+      value: at(lin(A[0][0], A[0][1]), q),
+      pure: pureNE(A, B)
+    };
+  }
+
+  function constSum(gm) {
+    const s = gm.A[0][0] + gm.B[0][0];
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) if (gm.A[i][j] + gm.B[i][j] !== s) return null;
+    return s;
+  }
+
+  function audit() {
+    const bad = [];
+    GAMES.forEach(function (gm) {
+      try {
+        const g = seat(gm), s = solve(g.A, g.B);
+        if (s.pure.length) bad.push(gm.id + ': has a pure equilibrium');
+      } catch (e) { bad.push(gm.id + ': ' + e.message); }
+      gm.constSum = constSum(gm);
+    });
+    return bad;
+  }
+
+  /* ================= input ================= */
+
+  function parseMix(raw) {
+    let s = String(raw == null ? '' : raw).trim().replace(/\s+/g, '').replace(',', '.');
+    if (!s) return { err: 'Type a number first.' };
+    let pct = false;
+    if (s.slice(-1) === '%') { pct = true; s = s.slice(0, -1); }
+    let f = null, m;
+    if ((m = s.match(/^(\d+)\/(\d+)$/))) {
+      if (/^0+$/.test(m[2])) return { err: 'That bottom number is zero.' };
+      f = new F(BigInt(m[1]), BigInt(m[2]));
+    } else if ((m = s.match(/^(\d*)\.(\d+)$/))) {
+      f = new F(BigInt((m[1] || '0') + m[2]), BigInt('1' + '0'.repeat(m[2].length)));
+    } else if ((m = s.match(/^(\d+)$/))) {
+      f = new F(BigInt(m[1]));
+    } else return { err: 'Try a fraction (3/7), a decimal (0.43) or a percent (43%).' };
+    if (pct) f = f.div(new F(100));
+    else if (f.gt(ONE)) f = f.div(new F(100));
+    if (f.lt(ZERO) || f.gt(ONE)) return { err: 'It has to land between 0 and 1.' };
+    return { f: f };
+  }
+
+  /* ================= score ================= */
+
+  const KEY = 'indifference-drill-v3';
+  let stats = { score: 0, streak: 0 };
+  try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); if (o && typeof o.score === 'number') stats = { score: o.score | 0, streak: o.streak | 0 }; } } catch (e) {}
+  function saveStats() { try { localStorage.setItem(KEY, JSON.stringify(stats)); } catch (e) {} }
+  function paintStats() {
+    document.getElementById('h-score').textContent = stats.score;
+    document.getElementById('h-streak').textContent = stats.streak;
+  }
+
+  /* ================= state ================= */
+
+  const app = document.getElementById('app');
+  let R = null;
+  const esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  function scoutMix(q) {
+    const far = [], near = [];
+    for (let k = 1; k < 20; k++) {
+      const c = new F(k, 20), d = Math.abs(c.val() - q.val());
+      if (d >= 0.12) far.push(c); else if (d >= 0.06) near.push(c);
+    }
+    return pick(far.length ? far : (near.length ? near : [new F(1, 4)]));
+  }
+
+  function newRound(id) {
+    const gm = GAMES.find(function (x) { return x.id === id; }) || GAMES[0];
+    const g = seat(gm), s = solve(g.A, g.B);
+    const mode = gm.constSum === null ? 'read' : pick(['read', 'long']);
+    const r = {
+      gm: gm, g: g, s: s, mode: mode, tries: 0,
+      scout: scoutMix(s.q), ptsP: 0, ptsQ: 0, ptsD: 0
+    };
+    r.ev = [at(s.mine[0], r.scout), at(s.mine[1], r.scout)];
+    r.best = r.ev[0].eq(r.ev[1]) ? -1 : (r.ev[0].gt(r.ev[1]) ? 0 : 1);
+    r.floor = [Math.min(g.A[0][0], g.A[0][1]), Math.min(g.A[1][0], g.A[1][1])];
+    r.floorCol = [g.A[0][0] <= g.A[0][1] ? 0 : 1, g.A[1][0] <= g.A[1][1] ? 0 : 1];
+    return r;
+  }
+
+  /* ================= pieces ================= */
+
+  function gridHtml(r, lit) {
+    const g = r.g, gm = r.gm;
+    let rows = '';
+    for (let i = 0; i < 2; i++) {
+      let cells = '';
+      for (let j = 0; j < 2; j++) {
+        const on = lit && lit[0] === i && lit[1] === j ? ' lit' : '';
+        cells += '<td class="box' + on + '" data-i="' + i + '" data-j="' + j + '" tabindex="0">' +
+          '<span class="in"><span class="mine num">' + sg(g.A[i][j]) + '</span>' +
+          '<span class="slash">/</span>' +
+          '<span class="yours num">' + sg(g.B[i][j]) + '</span></span></td>';
+      }
+      rows += '<tr><th scope="row">' + esc(g.me.actions[i].name) +
+        (g.me.actions[i].sub ? '<span class="sub">' + esc(g.me.actions[i].sub) + '</span>' : '') +
+        '</th>' + cells + '</tr>';
+    }
+    const heads = [0, 1].map(function (j) {
+      return '<th scope="col">' + esc(g.them.actions[j].name) +
+        (g.them.actions[j].sub ? '<span class="sub">' + esc(g.them.actions[j].sub) + '</span>' : '') + '</th>';
+    }).join('');
+
+    return '<div class="grid-wrap"><table class="grid"><thead><tr>' +
+      '<td class="nw"><span class="a">' + esc(g.them.name) + ' picks →</span><span class="b">↓ you pick</span></td>' +
+      heads + '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<p class="key"><span><i style="background:var(--you)"></i>your ' + esc(gm.unitShort) + '</span>' +
+      '<span><i style="background:var(--them)"></i>' + esc(g.them.name) + '’s ' + esc(gm.unitShort) + '</span>' +
+      '<span>' + esc(gm.unit) + '</span></p>' +
+      '<p class="read" id="read">Tap any box to read it in words.</p>';
+  }
+
+  function wireGrid(r) {
+    const out = document.getElementById('read');
+    if (!out) return;
+    Array.prototype.forEach.call(document.querySelectorAll('td.box'), function (td) {
+      const say = function () {
+        const i = +td.dataset.i, j = +td.dataset.j, g = r.g;
+        Array.prototype.forEach.call(document.querySelectorAll('td.box'), function (x) { x.classList.remove('on'); });
+        td.classList.add('on');
+        out.innerHTML = 'You play <b>' + esc(g.me.actions[i].name.toLowerCase()) + '</b>, ' +
+          esc(g.them.name) + ' plays <b>' + esc(g.them.actions[j].name.toLowerCase()) + '</b>. ' +
+          'You get <b class="num">' + sg(g.A[i][j]) + '</b>, ' + esc(g.them.name) + ' gets <b class="num">' + sg(g.B[i][j]) + '</b>.';
+      };
+      td.addEventListener('click', say);
+      td.addEventListener('mouseenter', say);
+      td.addEventListener('focus', say);
+    });
+  }
+
+  /* The balance. Two bars, one per option. Equal length means the payoffs are
+     equal, which is exactly what the mix is supposed to do. Drawn from the
+     number the student typed, so a wrong answer visibly fails to level. */
+  function balance(o) {
+    const span = o.hi - o.lo || 1;
+    const w = function (v) { return 6 + 94 * (v - o.lo) / span; };
+    const rows = o.rows.map(function (row, i) {
+      // both bars in a group belong to the same player, so they share a colour;
+      // the only thing being compared is length
+      return '<div class="beam-row"><span class="beam-name">' + esc(row.name) + '</span>' +
+        '<div class="beam-track"><span class="beam-fill ' + o.fill + '" data-w="' + w(row.v.val()).toFixed(2) + '"></span></div>' +
+        '<span class="beam-val">' + fd(row.v) + '</span></div>';
+    }).join('');
+    const head = { ok: 'Level.', near: 'Nearly level.', no: 'Not level.' }[o.state];
+    return '<div class="bal" data-bal>' +
+      '<p class="bal-top"><span class="lbl">' + o.lead + '</span><span class="val" style="color:var(--' + o.tone + ')">' + o.mix + '</span></p>' +
+      '<div class="beam">' + rows + '</div>' +
+      '<p class="verdict ' + o.state + '"><b>' + head + '</b> <span>' + o.say + '</span></p>' +
+      '</div>';
+  }
+
+  function runBalances() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-bal]'), function (el) {
+      const fills = el.querySelectorAll('.beam-fill');
+      const go = function () {
+        Array.prototype.forEach.call(fills, function (f) { f.style.width = f.dataset.w + '%'; });
+        el.classList.add('go');
+      };
+      if (reduced) go(); else requestAnimationFrame(function () { requestAnimationFrame(go); });
+    });
+  }
+
+  function countUp(el, to, ms, fmt) {
+    if (reduced) { el.textContent = fmt(to); return; }
+    const t0 = performance.now();
+    (function step(now) {
+      const k = Math.min(1, (now - t0) / ms);
+      el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  /* ================= step 1 ================= */
+
+  function screenSolve(r) {
+    const g = r.g, gm = r.gm;
+    const retry = r.tries > 0;
+    app.innerHTML =
+      '<section class="card enter">' +
+      '<p class="kicker">' + esc(gm.name) + '</p>' +
+      '<p class="setup">' + gm.setup + '</p>' +
+      gridHtml(r) +
+      '</section>' +
+      '<section class="card enter">' +
+      '<h2 class="q">' + (retry ? 'Try those two again.' : 'Two numbers to find.') + '</h2>' +
+      '<p class="q-sub">' + (retry
+        ? 'One of them did not balance. Half marks from here.'
+        : 'Every mixed equilibrium is built on one idea: pick the mix that leaves the other player with nothing to gain either way.') + '</p>' +
+      '<div class="asks">' +
+      '<div class="ask">' +
+      '<p class="ask-head"><span class="tag them">q*</span><strong>How often ' + esc(g.them.name) + ' plays ' + esc(g.them.actions[0].name.toLowerCase()) + '</strong></p>' +
+      '<p class="ask-why">The number where <b>' + esc(g.me.actions[0].name.toLowerCase()) + '</b> and <b>' + esc(g.me.actions[1].name.toLowerCase()) + '</b> pay you exactly the same. Above it one of them wins, below it the other does. That is how you know when to pounce.</p>' +
+      '<input type="text" id="inQ" autocomplete="off" placeholder="e.g. 1/3 or 33%">' +
+      '</div>' +
+      '<div class="ask">' +
+      '<p class="ask-head"><span class="tag you">p*</span><strong>How often you play ' + esc(g.me.actions[0].name.toLowerCase()) + '</strong></p>' +
+      '<p class="ask-why">The number where ' + esc(g.them.name) + '’s two options pay <b>them</b> the same. Play it and there is no move they can make to beat you, because nothing they do changes their own total.</p>' +
+      '<input type="text" id="inP" autocomplete="off" placeholder="e.g. 1/3 or 33%">' +
+      '</div>' +
+      '</div>' +
+      '<div class="btns"><button class="btn" id="check" type="button">Check them</button></div>' +
+      '<p class="err" id="err" hidden></p>' +
+      '</section>';
+    wireGrid(r);
+    const q = document.getElementById('inQ'), p = document.getElementById('inP');
+    const fire = function (e) { if (e.key === 'Enter') submitSolve(); };
+    q.addEventListener('keydown', fire); p.addEventListener('keydown', fire);
+    document.getElementById('check').addEventListener('click', submitSolve);
+    q.focus({ preventScroll: true });
+  }
+
+  function fail(msg, id) {
+    const e = document.getElementById('err');
+    e.hidden = false; e.textContent = msg;
+    const f = document.getElementById(id); if (f) f.focus({ preventScroll: true });
+  }
+
+  function grade(ans, want, cap) {
+    const err = Math.abs(ans.val() - want.val());
+    if (ans.eq(want)) return cap;
+    if (err <= 0.005) return Math.round(cap * 0.9);
+    if (err <= 0.02) return Math.round(cap * 0.7);
+    if (err <= 0.05) return Math.round(cap * 0.3);
+    return 0;
+  }
+
+  function submitSolve() {
+    const r = R;
+    const rq = parseMix(document.getElementById('inQ').value);
+    if (rq.err) return fail(rq.err, 'inQ');
+    const rp = parseMix(document.getElementById('inP').value);
+    if (rp.err) return fail(rp.err, 'inP');
+    r.ansQ = rq.f; r.ansP = rp.f;
+    screenBalance(r);
+  }
+
+  function screenBalance(r) {
+    const g = r.g, gm = r.gm, s = r.s;
+
+    // my two options, valued at the q they typed
+    const myVals = [at(s.mine[0], r.ansQ), at(s.mine[1], r.ansQ)];
+    // their two options, valued at the p they typed
+    const thVals = [at(s.theirs[0], r.ansP), at(s.theirs[1], r.ansP)];
+
+    // Three states, not two. A near miss still earns most of the marks, so
+    // flagging it the same red as a genuinely wrong answer sends two signals.
+    const state = function (ans, want, vals) {
+      if (vals[0].eq(vals[1])) return 'ok';
+      return Math.abs(ans.val() - want.val()) <= 0.02 ? 'near' : 'no';
+    };
+    const qState = state(r.ansQ, s.q, myVals);
+    const pState = state(r.ansP, s.p, thVals);
+    const qLevel = qState === 'ok', pLevel = pState === 'ok';
+
+    const allA = [g.A[0][0], g.A[0][1], g.A[1][0], g.A[1][1]];
+    const allB = [g.B[0][0], g.B[0][1], g.B[1][0], g.B[1][1]];
+
+    const gap = function (a, b, who) {
+      const d = a.sub(b), ahead = d.gt(ZERO) ? 0 : 1;
+      return { ahead: ahead, txt: fd(d.gt(ZERO) ? d : b.sub(a)) };
+    };
+
+    const mg = gap(myVals[0], myVals[1]);
+    const tg = gap(thVals[0], thVals[1]);
+
+    const balQ = balance({
+      lead: 'If ' + esc(g.them.name) + ' plays ' + esc(g.them.actions[0].name.toLowerCase()) + ' this often:',
+      mix: r.ansQ.txt() + ' (' + r.ansQ.pct() + ')', tone: 'them', fill: 'a',
+      rows: [{ name: g.me.actions[0].name, v: myVals[0] }, { name: g.me.actions[1].name, v: myVals[1] }],
+      lo: Math.min.apply(null, allA), hi: Math.max.apply(null, allA),
+      state: qState,
+      say: qState === 'ok'
+        ? 'Both of your options pay the same, so you genuinely do not care what ' + esc(g.them.name) + ' does. That is q*.'
+        : (qState === 'near' ? 'Close. ' : '') + esc(g.me.actions[mg.ahead].name) + ' is still ahead by ' + mg.txt +
+          (qState === 'near' ? '. The exact answer closes that gap to nothing.' : '. You have a favourite, so this is not the tipping point.')
+    });
+
+    const balP = balance({
+      lead: 'If you play ' + esc(g.me.actions[0].name.toLowerCase()) + ' this often:',
+      mix: r.ansP.txt() + ' (' + r.ansP.pct() + ')', tone: 'you', fill: 'b',
+      rows: [{ name: g.them.actions[0].name, v: thVals[0] }, { name: g.them.actions[1].name, v: thVals[1] }],
+      lo: Math.min.apply(null, allB), hi: Math.max.apply(null, allB),
+      state: pState,
+      say: pState === 'ok'
+        ? esc(g.them.name) + ' gains nothing by switching, so there is no way to punish you. That is p*.'
+        : (pState === 'near' ? 'Close. ' : '') + esc(g.them.name) + ' would still pick ' +
+          esc(g.them.actions[tg.ahead].name.toLowerCase()) + ' and gain ' + tg.txt +
+          (pState === 'near' ? '. The exact answer leaves them nothing.' : '. You are readable.')
+    });
+
+    const both = qLevel && pLevel;
+    const cap = r.tries > 0 ? 20 : 40;
+    r.ptsQ = grade(r.ansQ, s.q, cap);
+    r.ptsP = grade(r.ansP, s.p, cap);
+
+    const canRetry = r.tries === 0 && (r.ptsQ === 0 || r.ptsP === 0);
+    app.innerHTML =
+      '<section class="card enter">' +
+      '<p class="kicker">' + esc(gm.name) + '</p>' +
+      '<h2 class="q">' + (both ? 'Both level.' : (qState !== 'no' && pState !== 'no' ? 'Almost level.' : 'Watch the bars.')) + '</h2>' +
+      '<p class="q-sub">' + (both
+        ? 'That is what a mixed equilibrium is. Nothing either of you does changes the other one’s total.'
+        : 'Equal bars mean equal payoffs. A mix that leaves one bar longer is a mix your opponent can still take advantage of.') + '</p>' +
+      balQ + balP +
+      '<div class="btns" style="margin-top:20px">' +
+      (canRetry ? '<button class="btn ghost" id="again" type="button">Try again</button>' : '') +
+      '<button class="btn" id="on" type="button">' + (both ? 'Now use it' : 'Carry on anyway') + '</button>' +
+      '</div>' +
+      '</section>';
+    runBalances();
+    if (canRetry) document.getElementById('again').addEventListener('click', function () {
+      r.tries = 1; screenSolve(r); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
+    document.getElementById('on').addEventListener('click', function () {
+      screenPlay(r); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ================= step 2 ================= */
+
+  function screenPlay(r) {
+    const g = r.g, gm = r.gm;
+    let body;
+    if (r.mode === 'read') {
+      body = '<h2 class="q">Which do you play?</h2>' +
+        '<p class="q-sub">Your q* said <b class="num">' + r.ansQ.pct() + '</b>. ' + esc(g.them.name) +
+        ' is actually at <b class="num">' + r.scout.pct() + '</b>, so one of your two options is now worth more than the other. Take it.</p>' +
+        '<div class="picks">' +
+        [0, 1].map(function (i) {
+          return '<button class="pick" type="button" data-act="' + i + '"><b>' + esc(g.me.actions[i].name) + '</b>' +
+            '<span>' + esc(g.me.actions[i].sub || ' ') + '</span></button>';
+        }).join('') + '</div>';
+    } else {
+      body = '<h2 class="q">200 rounds. How do you play them?</h2>' +
+        '<p class="q-sub">' + esc(g.them.name) + ' is at <b class="num">' + r.scout.pct() + '</b> today, off balance and beatable. But they adapt: anything you repeat, they will answer.</p>' +
+        '<div class="picks">' +
+        '<button class="pick" type="button" data-hold="0"><b>' + esc(g.me.actions[0].name) + ', every time</b><span>Pick one side and hammer it.</span></button>' +
+        '<button class="pick" type="button" data-hold="1"><b>' + esc(g.me.actions[1].name) + ', every time</b><span>Pick one side and hammer it.</span></button>' +
+        '<button class="pick" type="button" data-hold="mix"><b>Stick to your p*</b><span>Mix at ' + r.ansP.pct() + ' and stay unreadable.</span></button>' +
+        '</div>';
+    }
+    app.innerHTML =
+      '<section class="card enter"><p class="kicker">' + esc(gm.name) + '</p>' + gridHtml(r) + '</section>' +
+      '<section class="card enter">' + body + '</section>';
+    wireGrid(r);
+    Array.prototype.forEach.call(document.querySelectorAll('.pick'), function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.hold !== undefined) doLong(b.dataset.hold);
+        else doRead(+b.dataset.act);
+      });
+    });
+  }
+
+  /* ================= step 3 ================= */
+
+  function bank(pts, clean) {
+    stats.score += pts;
+    stats.streak = clean ? stats.streak + 1 : 0;
+    saveStats(); paintStats();
+  }
+
+  function totalNum(gm, v) {
+    const d = gm.totalDiv || 1;
+    return d === 1 ? sg(v) : (v < 0 ? MINUS : '+') + (Math.abs(v) / d).toFixed(1);
+  }
+
+  function doRead(i) {
+    const r = R, g = r.g, gm = r.gm;
+    const right = r.best === -1 || r.best === i;
+    r.ptsD = right ? 40 : 0;
+    bank(r.ptsP + r.ptsQ + r.ptsD, right && r.ptsP >= 28 && r.ptsQ >= 28);
+
+    const N = 200, tot = [0, 0], qv = r.scout.val();
+    for (let k = 0; k < N; k++) {
+      const j = Math.random() < qv ? 0 : 1;
+      tot[0] += g.A[0][j]; tot[1] += g.A[1][j];
+    }
+    const mine = tot[i], other = tot[1 - i];
+
+    let line;
+    if (r.best === -1) line = esc(g.them.name) + ' is sitting exactly on q*, so both options pay the same and there was nothing to find. Full marks. That is what a correct mix does to an opponent.';
+    else if (right) line = '<b>' + esc(g.me.actions[i].name) + '</b> pays ' + fd(r.ev[i]) + ' a round against ' + fd(r.ev[1 - i]) + ' for the other one. You take the difference every single round.';
+    else line = '<b>' + esc(g.me.actions[i].name) + '</b> pays ' + fd(r.ev[i]) + ' a round. <b>' + esc(g.me.actions[1 - i].name) + '</b> paid ' + fd(r.ev[1 - i] ) + '. You gave up the gap 200 times.';
+
+    result(r, {
+      win: mine >= other,
+      big: totalNum(gm, mine),
+      cap: esc(gm.unitShort) + ' over 200 rounds',
+      why: line,
+      race: [
+        { who: g.me.actions[i].name + ' (you)', v: mine, me: true },
+        { who: g.me.actions[1 - i].name, v: other, me: false }
+      ],
+      lit: [i, qv >= 0.5 ? 0 : 1],
+      work: workRead(r, i)
+    });
+  }
+
+  function doLong(choice) {
+    const r = R, g = r.g, gm = r.gm, s = r.s;
+    const held = choice === 'mix';
+    const pi = held ? (r.best === -1 ? 0 : r.best) : parseInt(choice, 10);
+    r.ptsD = held ? 40 : 0;
+    bank(r.ptsP + r.ptsQ + r.ptsD, held && r.ptsP >= 28 && r.ptsQ >= 28);
+
+    const N = 200, ADAPT = 50, qv = r.scout.val(), pv = r.ansP.val();
+    let pure = 0, mix = 0;
+    for (let k = 0; k < N; k++) {
+      const wise = k >= ADAPT;
+      pure += g.A[pi][wise ? r.floorCol[pi] : (Math.random() < qv ? 0 : 1)];
+      const j = wise ? (Math.random() < 0.5 ? 0 : 1) : (Math.random() < qv ? 0 : 1);
+      mix += g.A[Math.random() < pv ? 0 : 1][j];
+    }
+
+    const line = held
+      ? 'Nothing ' + esc(g.them.name) + ' tried made a dent, because at p* every reply pays them the same. You collected <b>' + fd(s.value) + '</b> a round the whole way through.'
+      : 'It worked for about 50 rounds. Then ' + esc(g.them.name) + ' switched to <b>' + esc(g.them.actions[r.floorCol[pi]].name.toLowerCase()) + '</b>, stayed there, and pinned you at <b>' + r.floor[pi] + '</b> a round with nothing left to change.';
+
+    result(r, {
+      win: held,
+      big: totalNum(gm, held ? mix : pure),
+      cap: esc(gm.unitShort) + ' over 200 rounds',
+      why: line,
+      race: [
+        { who: 'Pure ' + g.me.actions[pi].name.toLowerCase() + (held ? '' : ' (you)'), v: pure, me: !held },
+        { who: 'Mixing at p*' + (held ? ' (you)' : ''), v: mix, me: held }
+      ],
+      lit: null,
+      work: workLong(r)
+    });
+  }
+
+  function result(r, o) {
+    const gm = r.gm, s = r.s;
+    const mx = Math.max.apply(null, o.race.map(function (x) { return Math.abs(x.v); })) || 1;
+    const races = o.race.map(function (x) {
+      return '<div class="race-row"><span class="who' + (x.me ? ' me' : '') + '">' + esc(x.who) + '</span>' +
+        '<div class="race-track"><span class="race-fill ' + (x.v >= 0 ? 'pos' : 'neg') + '" data-w="' + (Math.abs(x.v) / mx * 100).toFixed(1) + '"></span></div>' +
+        '<span class="amt">' + totalNum(gm, x.v) + '</span></div>';
+    }).join('');
+
+    const exact = '<p class="q-sub" style="margin:16px 0 0">The real answers were <span class="tag them">q* ' + ft(s.q) + '</span> and <span class="tag you">p* ' + ft(s.p) + '</span></p>';
+
+    app.innerHTML =
+      '<section class="card enter"><p class="kicker">' + esc(gm.name) + '</p>' + gridHtml(r, o.lit) + '</section>' +
+      '<section class="card enter">' +
+      '<div class="out ' + (o.win ? 'win' : 'lose') + '"><p class="big num" id="tick">0</p><p class="cap">' + o.cap + '</p></div>' +
+      '<div class="race">' + races + '</div>' +
+      '<p class="why" style="margin-top:16px">' + o.why + '</p>' +
+      exact +
+      '<details class="fold"><summary>Show the working</summary>' + o.work + '</details>' +
+      '<div class="foot"><span>This round <b class="num">+' + (r.ptsP + r.ptsQ + r.ptsD) + '</b> of 120</span>' +
+      '<button class="btn" id="next" type="button">Next round</button></div>' +
+      '</section>';
+
+    wireGrid(r);
+    const tick = document.getElementById('tick');
+    const raw = o.race.find(function (x) { return x.me; });
+    const val = raw ? raw.v : 0;
+    countUp(tick, val, 1100, function (v) { return totalNum(gm, v); });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        Array.prototype.forEach.call(document.querySelectorAll('.race-fill'), function (f) { f.style.width = f.dataset.w + '%'; });
+      });
+    });
+    document.getElementById('next').addEventListener('click', function () {
+      start(r.gm.id); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ================= working ================= */
+
+  function workRead(r, i) {
+    const g = r.g, s = r.s, A = g.A;
+    const L0 = s.mine[0], L1 = s.mine[1];
+    return '<div class="work">' +
+      '<span class="d">q* is where your two rows are equal:</span><br>' +
+      '<span class="me">' + esc(g.me.actions[0].name) + '</span>  ' + rawTxt(A[0][0], A[0][1], 'q') + '  =  ' + linTxt(L0, 'q') + '<br>' +
+      '<span class="me">' + esc(g.me.actions[1].name) + '</span>  ' + rawTxt(A[1][0], A[1][1], 'q') + '  =  ' + linTxt(L1, 'q') + '<br>' +
+      '<hr>' + linTxt(L0, 'q') + ' = ' + linTxt(L1, 'q') + '  →  q* = <span class="th">' + ft(s.q) + '</span><br>' +
+      '<hr><span class="d">at their real mix q = ' + r.scout.txt() + ':</span><br>' +
+      '<span class="me">' + esc(g.me.actions[0].name) + '</span>  ' + fd(r.ev[0]) + '<br>' +
+      '<span class="me">' + esc(g.me.actions[1].name) + '</span>  ' + fd(r.ev[1]) + '<br>' +
+      (r.best === -1 ? '<span class="d">dead level, either one</span>' : '→ play <span class="me">' + esc(g.me.actions[r.best].name) + '</span>') +
+      '</div>';
+  }
+
+  function workLong(r) {
+    const g = r.g, s = r.s, B = g.B;
+    const T0 = s.theirs[0], T1 = s.theirs[1];
+    return '<div class="work">' +
+      '<span class="d">p* is where <span class="th">' + esc(g.them.name) + '</span>’s two columns are equal:</span><br>' +
+      '<span class="th">' + esc(g.them.actions[0].name) + '</span>  ' + rawTxt(B[0][0], B[1][0], 'p') + '  =  ' + linTxt(T0, 'p') + '<br>' +
+      '<span class="th">' + esc(g.them.actions[1].name) + '</span>  ' + rawTxt(B[0][1], B[1][1], 'p') + '  =  ' + linTxt(T1, 'p') + '<br>' +
+      '<hr>' + linTxt(T0, 'p') + ' = ' + linTxt(T1, 'p') + '  →  p* = <span class="me">' + ft(s.p) + '</span><br>' +
+      '<hr><span class="d">what p* pays you, whatever they do:</span><br>' +
+      '<span class="th">' + esc(g.them.actions[0].name) + '</span>  ' + fd(at(s.vsCol[0], s.p)) + '<br>' +
+      '<span class="th">' + esc(g.them.actions[1].name) + '</span>  ' + fd(at(s.vsCol[1], s.p)) + '<br>' +
+      '→ same either way: <span class="me">' + ft(s.value) + '</span>' +
+      '</div>';
+  }
+
+  /* ================= boot ================= */
+
+  function start(id) {
+    R = newRound(id);
+    Array.prototype.forEach.call(document.querySelectorAll('#games button'), function (b) {
+      b.setAttribute('aria-current', b.dataset.id === id ? 'true' : 'false');
+    });
+    screenSolve(R);
+  }
+
+  function boot() {
+    const bad = audit();
+    if (bad.length) { app.innerHTML = '<div class="boot">These games are misspecified:<br>' + bad.map(esc).join('<br>') + '</div>'; return; }
+    document.getElementById('games').innerHTML = GAMES.map(function (gm) {
+      return '<button type="button" data-id="' + gm.id + '">' + esc(gm.tab) + '</button>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('#games button'), function (b) {
+      b.addEventListener('click', function () { start(b.dataset.id); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); });
+    });
+    paintStats();
+    start(GAMES[0].id);
+  }
+
+  if (window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(boot);
+  else boot();
+})();
+</script>

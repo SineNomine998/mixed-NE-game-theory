@@ -1,0 +1,1739 @@
+<title>The Indifference Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --bg:        #eef0f3;
+    --surface:   #ffffff;
+    --surface-2: #e4e7ec;
+    --sunk:      #e8ebef;
+    --ink:       #16202b;
+    --ink-2:     #4a5866;
+    --ink-3:     #76838f;
+    --line:      #cfd6de;
+    --line-2:    #b9c3ce;
+    --you:       #b4530b;
+    --you-bg:    #f8e8d6;
+    --them:      #2b6668;
+    --them-bg:   #dbe8e8;
+    --good:      #1f6b43;
+    --good-bg:   #dcefe3;
+    --bad:       #97302b;
+    --bad-bg:    #f6e0de;
+    --warn:      #7d5f0c;
+    --warn-bg:   #f5ead0;
+    --shadow:    0 1px 2px rgba(22,32,43,.06), 0 8px 24px -12px rgba(22,32,43,.18);
+  }
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg:        #111920;
+      --surface:   #18222c;
+      --surface-2: #1f2c37;
+      --sunk:      #141d25;
+      --ink:       #e7edf3;
+      --ink-2:     #a8b6c2;
+      --ink-3:     #7b8b98;
+      --line:      #2b3a47;
+      --line-2:    #3a4b59;
+      --you:       #e59b53;
+      --you-bg:    #3a2916;
+      --them:      #63b6b1;
+      --them-bg:   #16302f;
+      --good:      #6dbe8d;
+      --good-bg:   #17301f;
+      --bad:       #e5827b;
+      --bad-bg:    #331a19;
+      --warn:      #d9b44f;
+      --warn-bg:   #302713;
+      --shadow:    0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg:        #111920;
+    --surface:   #18222c;
+    --surface-2: #1f2c37;
+    --sunk:      #141d25;
+    --ink:       #e7edf3;
+    --ink-2:     #a8b6c2;
+    --ink-3:     #7b8b98;
+    --line:      #2b3a47;
+    --line-2:    #3a4b59;
+    --you:       #e59b53;
+    --you-bg:    #3a2916;
+    --them:      #63b6b1;
+    --them-bg:   #16302f;
+    --good:      #6dbe8d;
+    --good-bg:   #17301f;
+    --bad:       #e5827b;
+    --bad-bg:    #331a19;
+    --warn:      #d9b44f;
+    --warn-bg:   #302713;
+    --shadow:    0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Libre Franklin', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding-inline: 18px;
+    padding-block: 28px 64px;
+  }
+
+  h1, h2, h3 { font-family: 'Zilla Slab', Georgia, serif; font-weight: 600; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+
+  .num { font-family: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', monospace; font-variant-numeric: tabular-nums; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: flex; flex-wrap: wrap; gap: 18px 24px;
+    align-items: flex-end; justify-content: space-between;
+    padding-bottom: 18px; margin-bottom: 22px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .masthead h1 { font-size: 30px; letter-spacing: -.015em; line-height: 1.1; }
+  .masthead .sub { color: var(--ink-2); font-size: 13.5px; margin-top: 4px; max-width: 46ch; }
+
+  .score { display: flex; gap: 20px; margin: 0; }
+  .score div { text-align: right; }
+  .score dt {
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 1px;
+  }
+  .score dd { margin: 0; font-size: 20px; font-weight: 600; }
+
+  /* ---------- controls ---------- */
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end;
+    padding: 14px 16px; margin-bottom: 22px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
+  }
+  .ctl { display: flex; flex-direction: column; gap: 4px; flex: 1 1 150px; min-width: 0; }
+  .ctl > span {
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3);
+  }
+  select, .btn, input[type="text"] {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-2); border-radius: 2px; padding: 7px 9px;
+  }
+  select { width: 100%; }
+  input[type="text"] {
+    font-family: 'IBM Plex Mono', monospace; font-size: 15px;
+  }
+  .btn {
+    cursor: pointer; font-weight: 600; font-size: 13.5px;
+    padding: 8px 15px; background: var(--ink); color: var(--bg);
+    border-color: var(--ink); white-space: nowrap;
+  }
+  .btn:hover { opacity: .88; }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
+  .btn.ghost:hover { background: var(--surface-2); opacity: 1; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  :focus-visible { outline: 2px solid var(--you); outline-offset: 2px; }
+
+  /* ---------- drill card ---------- */
+  .drill { display: flex; flex-direction: column; gap: 0; }
+
+  .eyebrow {
+    font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 6px;
+  }
+
+  /* progress: three stages, one on screen at a time */
+  .steps {
+    display: flex; flex-wrap: wrap; gap: 6px 20px; list-style: none;
+    margin: 0 0 16px; padding: 0;
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .steps li { display: flex; align-items: center; gap: 7px; }
+  .steps b {
+    width: 19px; height: 19px; border-radius: 50%; display: grid; place-items: center;
+    border: 1px solid var(--line-2); font-size: 11px; font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .steps li.on { color: var(--ink); }
+  .steps li.on b { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .steps li.done { color: var(--you); }
+  .steps li.done b { border-color: var(--you); color: var(--you); }
+
+  .slim {
+    border-left: 3px solid var(--band-acc); padding: 2px 0 2px 13px; margin-bottom: 18px;
+  }
+  .slim-title { font-family: 'Zilla Slab', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2; }
+  .slim-sub { font-size: 12.5px; color: var(--ink-3); margin-top: 1px; }
+  .slim-sub b { color: var(--you); font-weight: 600; }
+
+  .markbar {
+    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+    margin-bottom: 18px;
+  }
+  .mark {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600;
+    padding: 4px 11px; border-radius: 2px; border: 1px solid;
+  }
+  .mark .num { font-size: 13px; opacity: .85; }
+  .mark.y { color: var(--good); background: var(--good-bg); border-color: color-mix(in srgb, var(--good) 38%, transparent); }
+  .mark.n { color: var(--bad);  background: var(--bad-bg);  border-color: color-mix(in srgb, var(--bad) 38%, transparent); }
+  .markbar-note { font-size: 12px; color: var(--ink-3); }
+
+  .intel-sub { font-size: 13px; margin-top: 3px; opacity: .85; }
+
+  .scene { margin-bottom: 22px; }
+
+  /* Each game gets its own marquee. The band is a self-contained dark surface,
+     so its palette is free of the page theme entirely -- while the payoff
+     colours below stay fixed, because a student should never have to re-learn
+     which colour is theirs from one drill to the next. */
+  .band {
+    position: relative; overflow: hidden; border-radius: 3px;
+    background: var(--band-bg); color: var(--band-ink);
+    padding: 22px 24px; margin-bottom: 20px;
+    display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 20px; align-items: center;
+    box-shadow: var(--shadow);
+  }
+  .band::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.09);
+    border-radius: 3px;
+  }
+  .band .eyebrow { color: var(--band-acc); margin-bottom: 7px; }
+  .band h2 { font-size: 30px; line-height: 1.08; letter-spacing: -.015em; color: var(--band-ink); }
+  .band .tagline {
+    font-family: 'Zilla Slab', Georgia, serif; font-style: italic; font-size: 16px;
+    margin-top: 4px; opacity: .82; max-width: 40ch;
+  }
+  .band .stake {
+    margin-top: 13px; padding-top: 11px; font-size: 13px;
+    border-top: 1px solid color-mix(in srgb, var(--band-ink) 22%, transparent);
+    max-width: 44ch;
+  }
+  .band .stake b { color: var(--band-acc); font-weight: 600; letter-spacing: .02em; }
+  .band .art { width: 190px; height: 124px; flex: none; }
+  @media (max-width: 620px) {
+    .band { grid-template-columns: minmax(0,1fr); padding: 18px; }
+    .band h2 { font-size: 24px; }
+    .band .art { width: 100%; max-width: 230px; height: auto; order: -1; }
+  }
+
+  .story { margin-top: 0; display: flex; flex-direction: column; gap: 9px; max-width: 62ch; color: var(--ink-2); }
+  .story strong { color: var(--ink); font-weight: 600; }
+
+  .headline {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px;
+    font-family: 'Zilla Slab', Georgia, serif; font-size: 21px; font-weight: 600;
+    margin-bottom: 11px;
+  }
+  .headline.win  { color: var(--good); }
+  .headline.lose { color: var(--bad); }
+  .headline small {
+    font-family: 'Libre Franklin', sans-serif; font-size: 12.5px;
+    font-weight: 400; color: var(--ink-3);
+  }
+
+  .roles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .role {
+    font-size: 12px; padding: 4px 9px; border-radius: 2px; border: 1px solid;
+    display: inline-flex; gap: 6px; align-items: baseline;
+  }
+  .role b { font-weight: 600; }
+  .role.you   { color: var(--you);  background: var(--you-bg);  border-color: color-mix(in srgb, var(--you) 35%, transparent); }
+  .role.them  { color: var(--them); background: var(--them-bg); border-color: color-mix(in srgb, var(--them) 35%, transparent); }
+  .role.mode  { color: var(--ink-2); background: var(--surface-2); border-color: var(--line); }
+
+  /* ---------- payoff board ---------- */
+  .board {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
+    padding: 16px; box-shadow: var(--shadow); margin-bottom: 20px;
+  }
+  .table-wrap { overflow-x: auto; }
+  table.payoff { border-collapse: collapse; width: 100%; min-width: 380px; }
+  table.payoff th, table.payoff td { border: 1px solid var(--line); padding: 0; }
+  table.payoff thead th, table.payoff tbody th {
+    font-family: 'Libre Franklin', sans-serif; font-weight: 600; font-size: 13.5px;
+    padding: 9px 11px; background: var(--sunk); text-align: left; vertical-align: top;
+  }
+  table.payoff thead th { color: var(--them); }
+  table.payoff tbody th { color: var(--you); width: 27%; }
+  table.payoff .note {
+    display: block; font-weight: 400; font-size: 11px; color: var(--ink-3);
+    margin-top: 1px; line-height: 1.3;
+  }
+  td.corner {
+    background: var(--sunk); position: relative; padding: 8px 10px !important;
+    background-image: linear-gradient(to bottom right, transparent calc(50% - .5px), var(--line-2) calc(50% - .5px), var(--line-2) calc(50% + .5px), transparent calc(50% + .5px));
+  }
+  .cor-them { display: block; text-align: right; font-size: 10.5px; color: var(--them); letter-spacing: .04em; }
+  .cor-you  { display: block; text-align: left;  font-size: 10.5px; color: var(--you);  letter-spacing: .04em; margin-top: 10px; }
+
+  td.cell { position: relative; height: 62px; }
+  .pay {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    height: 100%; padding: 7px 9px;
+    background-image: linear-gradient(to bottom right, transparent calc(50% - .5px), var(--line) calc(50% - .5px), var(--line) calc(50% + .5px), transparent calc(50% + .5px));
+  }
+  .p-you  { grid-area: 1/1; justify-self: start; align-self: start; color: var(--you);  font-size: 18px; font-weight: 600; }
+  .p-them { grid-area: 2/2; justify-self: end;   align-self: end;   color: var(--them); font-size: 14px; }
+  td.cell.lit { background: var(--you-bg); }
+  td.cell.lit .pay { background-image: linear-gradient(to bottom right, transparent calc(50% - .5px), color-mix(in srgb, var(--you) 30%, transparent) calc(50% - .5px), color-mix(in srgb, var(--you) 30%, transparent) calc(50% + .5px), transparent calc(50% + .5px)); }
+
+  .board-caption {
+    margin-top: 11px; font-size: 12px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 4px 14px;
+  }
+  .swatch { display: inline-flex; align-items: center; gap: 5px; }
+  .swatch i { width: 9px; height: 9px; border-radius: 1px; display: inline-block; }
+
+  /* ---------- steps ---------- */
+  .step, .reveal {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
+    padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow);
+  }
+  .step h3, .reveal h3 { font-size: 18px; margin-bottom: 6px; }
+  .step .ask { color: var(--ink-2); max-width: 60ch; margin-bottom: 14px; }
+
+  .intel {
+    border-left: 3px solid var(--them); background: var(--them-bg);
+    padding: 11px 14px; margin-bottom: 15px; border-radius: 0 2px 2px 0;
+  }
+  .intel .eyebrow { color: var(--them); margin-bottom: 3px; }
+  .intel p { font-size: 14px; }
+  .intel .big { font-size: 17px; font-weight: 600; }
+
+  .answer-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+  .answer-row input[type="text"] { flex: 1 1 170px; min-width: 0; }
+  .hint { font-size: 12px; color: var(--ink-3); margin-top: 9px; }
+
+  /* the two mixes, asked side by side so the pairing is unmissable */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .duo { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field label { font-size: 13px; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+  .field label b { color: var(--ink); font-weight: 600; }
+  .field input { width: 100%; }
+  .micro { font-size: 11.5px; color: var(--ink-3); line-height: 1.4; }
+  .micro strong { font-weight: 600; }
+
+  .sym {
+    font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px;
+    padding: 1px 6px; border-radius: 2px; letter-spacing: -.02em;
+  }
+  .sym.you, .tag-you   { color: var(--you);  background: var(--you-bg);  font-family: 'IBM Plex Mono', monospace; font-weight: 600; padding: 1px 6px; border-radius: 2px; font-size: 13px; }
+  .sym.them, .tag-them { color: var(--them); background: var(--them-bg); font-family: 'IBM Plex Mono', monospace; font-weight: 600; padding: 1px 6px; border-radius: 2px; font-size: 13px; }
+
+  .verdict-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 620px) { .verdict-duo { grid-template-columns: 1fr; } }
+  .mini { border: 1px solid; border-radius: 2px; padding: 10px 12px; }
+  .mini.ok  { background: var(--good-bg); border-color: color-mix(in srgb, var(--good) 38%, transparent); }
+  .mini.mid { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 38%, transparent); }
+  .mini.no  { background: var(--bad-bg);  border-color: color-mix(in srgb, var(--bad) 38%, transparent); }
+  .mini-head { display: flex; flex-wrap: wrap; gap: 7px; align-items: baseline; font-size: 14px; margin-bottom: 4px; }
+  .mini.ok  .mini-head b { color: var(--good); }
+  .mini.mid .mini-head b { color: var(--warn); }
+  .mini.no  .mini-head b { color: var(--bad); }
+  .mini-head .num { color: var(--ink); font-weight: 600; }
+  .mini-note { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
+
+  .sim-head {
+    font-family: 'Libre Franklin', sans-serif; font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3); margin: 0 0 9px; font-weight: 600;
+  }
+
+  details.more summary {
+    cursor: pointer; font-size: 13px; color: var(--ink-2);
+    padding: 9px 0; border-top: 1px solid var(--line);
+    font-weight: 500;
+  }
+  details.more summary:hover { color: var(--ink); }
+  details.more .more-body { padding: 4px 0 12px; }
+  details.more .more-body > .work:last-child,
+  details.more .more-body > .sim:last-child,
+  details.more .more-body > .aside:last-child { margin-bottom: 0; }
+
+  .choices-3 .choice { flex: 1 1 155px; }
+
+  .tally {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--line); padding-top: 14px; font-size: 13px; color: var(--ink-2);
+  }
+  .tally b { color: var(--ink); font-size: 16px; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 11px; }
+  .choice {
+    flex: 1 1 190px; text-align: left; cursor: pointer;
+    border: 1px solid var(--line-2); background: var(--surface); border-radius: 2px;
+    padding: 13px 15px; font: inherit; color: var(--ink);
+  }
+  .choice:hover { border-color: var(--you); background: var(--you-bg); }
+  .choice b { display: block; font-family: 'Zilla Slab', serif; font-size: 17px; font-weight: 600; }
+  .choice span { font-size: 12px; color: var(--ink-3); }
+
+  /* ---------- verdict ---------- */
+  .verdict {
+    display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+    padding: 12px 15px; border-radius: 2px; margin-bottom: 16px; border: 1px solid;
+  }
+  .verdict .tag {
+    font-family: 'Zilla Slab', serif; font-size: 17px; font-weight: 700; letter-spacing: .01em;
+  }
+  .verdict p { font-size: 14px; flex: 1 1 260px; }
+  .verdict.ok   { background: var(--good-bg); border-color: color-mix(in srgb, var(--good) 40%, transparent); color: var(--good); }
+  .verdict.mid  { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 40%, transparent); color: var(--warn); }
+  .verdict.no   { background: var(--bad-bg);  border-color: color-mix(in srgb, var(--bad) 40%, transparent);  color: var(--bad); }
+  .verdict p { color: var(--ink-2); }
+
+  /* ---------- worked solution ---------- */
+  .work {
+    background: var(--sunk); border: 1px solid var(--line); border-radius: 2px;
+    padding: 14px 16px; margin-bottom: 18px; overflow-x: auto;
+  }
+  .work h4 {
+    font-family: 'Libre Franklin', sans-serif; font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3); margin: 0 0 9px; font-weight: 600;
+  }
+  .work h4 + .wline { margin-top: 0; }
+  .work .wline {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 1.75;
+    white-space: nowrap;
+  }
+  .work .wline .lbl { color: var(--ink-3); }
+  .work .wline em { font-style: normal; color: var(--you); font-weight: 600; }
+  .work .wline .th { color: var(--them); }
+  .work .rule { border: 0; border-top: 1px solid var(--line); margin: 11px 0; }
+  .work .concl { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 600; }
+
+  /* ---------- chart ---------- */
+  .chart { margin-bottom: 18px; }
+  .chart .cap { font-size: 12px; color: var(--ink-3); margin-bottom: 7px; }
+  .chart svg { width: 100%; height: auto; max-width: 100%; display: block; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 12px; color: var(--ink-2); }
+
+  /* ---------- simulation ---------- */
+  .sim { margin-bottom: 16px; }
+  .sim-row { display: grid; grid-template-columns: minmax(96px,auto) 1fr minmax(64px,auto); gap: 10px; align-items: center; margin-bottom: 7px; font-size: 13px; }
+  .sim-label { color: var(--ink-2); }
+  .sim-label.me { color: var(--you); font-weight: 600; }
+  .bar { background: var(--surface-2); height: 15px; border-radius: 1px; overflow: hidden; }
+  .bar i { display: block; height: 100%; }
+  .bar i.pos { background: var(--good); }
+  .bar i.neg { background: var(--bad); }
+  .sim-val { text-align: right; font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; font-size: 13px; }
+
+  .aside {
+    border-left: 3px solid var(--line-2); padding: 2px 0 2px 14px;
+    color: var(--ink-2); font-size: 13.5px; margin-bottom: 16px; max-width: 62ch;
+  }
+  .aside b { color: var(--ink); }
+
+  details.about {
+    border-top: 1px solid var(--line); margin-top: 30px; padding-top: 18px;
+  }
+  details.about summary {
+    cursor: pointer; font-family: 'Zilla Slab', serif; font-size: 17px; font-weight: 600;
+  }
+  details.about .body { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; color: var(--ink-2); max-width: 64ch; }
+  details.about h4 { font-family: 'Zilla Slab', serif; font-size: 15px; margin: 6px 0 0; color: var(--ink); }
+  details.about code { font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: var(--sunk); padding: 1px 4px; border-radius: 2px; }
+
+  .boot-error {
+    background: var(--bad-bg); border: 1px solid var(--bad); color: var(--bad);
+    padding: 14px; border-radius: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  }
+
+  @media (max-width: 560px) {
+    .masthead h1 { font-size: 25px; }
+    .score { gap: 14px; }
+    .score dd { font-size: 17px; }
+    .scene h2 { font-size: 22px; }
+    .work .wline { font-size: 12.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <h1>The Indifference Drill</h1>
+      <p class="sub">Mixed equilibria in 2&times;2 games. Find the threshold, then actually use it.</p>
+    </div>
+    <dl class="score" id="score">
+      <div><dt>Score</dt><dd class="num" id="s-score">0</dd></div>
+      <div><dt>Drills</dt><dd class="num" id="s-drills">0</dd></div>
+      <div><dt>Streak</dt><dd class="num" id="s-streak">0</dd></div>
+      <div><dt>Clock</dt><dd class="num" id="s-clock">0:00</dd></div>
+    </dl>
+  </header>
+
+  <section class="controls">
+    <label class="ctl"><span>Scenario</span><select id="sel-scenario"></select></label>
+    <label class="ctl"><span>You play</span><select id="sel-side"></select></label>
+    <label class="ctl"><span>Drill type</span><select id="sel-mode"></select></label>
+    <button class="btn" id="btn-deal" type="button">Deal a drill</button>
+  </section>
+
+  <main id="drill"></main>
+
+  <details class="about">
+    <summary>How this works, and the trap it's built around</summary>
+    <div class="body">
+      <p>A mixed equilibrium is not a prediction of what your opponent will do next. It is a pair of mixes with one property: <strong>each player's mix makes the other player exactly indifferent</strong> between their two actions.</p>
+      <p>That has a consequence students usually get backwards. If your opponent is playing their equilibrium mix, both of your actions earn <em>exactly the same</em> expected payoff. There is no "better move" to find. So "pick the higher-probability action and you'll win" cannot be right: at equilibrium there is nothing to pick.</p>
+      <p>The equilibrium is still worth computing. It just pays off in two specific ways, which are the two drills here. Both start by asking for <strong>both</strong> mixes, because each one answers a different question and you need them both to play.</p>
+      <h4>Read the Play</h4>
+      <p>Your opponent is <em>not</em> at equilibrium, so you get a scouting report on what they actually do. Their equilibrium mix <code>q*</code> is the <strong>threshold</strong>: if their real mix sits on one side of it, one of your actions is strictly better; on the other side, the other one is. That is what the equilibrium is <em>for</em> in practice.</p>
+      <h4>The Long Game</h4>
+      <p>Same sloppy opponent, but now they adapt, and you are playing 200 rounds rather than one. Exploiting them means going pure, and a pure strategy is readable: the moment they answer it you are pinned at that row's worst cell with nothing left to adjust. Your own mix <code>p*</code> gives up today's edge and buys a payoff no reply can touch. Here "guaranteed" is literally true, and the guarantee is the value of the game.</p>
+      <p>This one only appears in constant-sum games, where one player's gain really is the other's loss. In a game like The Rooftop Set the two payoff grids are unrelated, your mix guarantees you nothing, and the drill stays on Read the Play.</p>
+      <h4>The bit everyone gets backwards</h4>
+      <p><strong>Your</strong> mix is computed from <strong>your opponent's</strong> payoffs, and theirs from yours. You choose <code>p</code> so that <em>they</em> can't prefer either column. If you find yourself making yourself indifferent while solving for your own mix, you've crossed the wires.</p>
+      <h4>Answers</h4>
+      <p>Type a fraction (<code>3/7</code>), a decimal (<code>0.43</code>), or a percentage (<code>43%</code>). Exact fractions score a bonus, because the exact answer is the one that actually falls out of the algebra.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     Exact rational arithmetic. Payoffs are integers, so every equilibrium
+     in a 2x2 game is a ratio of integers -- no floats, no fuzzy grading.
+     ===================================================================== */
+
+  function gcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { const t = a % b; a = b; b = t; }
+    return a;
+  }
+
+  function F(n, d) {
+    if (!(this instanceof F)) return new F(n, d);
+    n = BigInt(n);
+    d = d === undefined ? 1n : BigInt(d);
+    if (d === 0n) throw new Error('zero denominator');
+    if (d < 0n) { n = -n; d = -d; }
+    const g = gcd(n, d) || 1n;
+    this.n = n / g;
+    this.d = d / g;
+  }
+  F.prototype.add = function (o) { return new F(this.n * o.d + o.n * this.d, this.d * o.d); };
+  F.prototype.sub = function (o) { return new F(this.n * o.d - o.n * this.d, this.d * o.d); };
+  F.prototype.mul = function (o) { return new F(this.n * o.n, this.d * o.d); };
+  F.prototype.div = function (o) { if (o.n === 0n) throw new Error('div by zero'); return new F(this.n * o.d, this.d * o.n); };
+  F.prototype.neg = function () { return new F(-this.n, this.d); };
+  F.prototype.cmp = function (o) { const l = this.n * o.d, r = o.n * this.d; return l < r ? -1 : l > r ? 1 : 0; };
+  F.prototype.eq = function (o) { return this.cmp(o) === 0; };
+  F.prototype.lt = function (o) { return this.cmp(o) < 0; };
+  F.prototype.gt = function (o) { return this.cmp(o) > 0; };
+  F.prototype.val = function () { return Number(this.n) / Number(this.d); };
+  F.prototype.txt = function () { return this.d === 1n ? String(this.n) : this.n + '/' + this.d; };
+  F.prototype.pct = function () {
+    const v = this.val() * 100;
+    const s = Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : v.toFixed(1);
+    return s + '%';
+  };
+
+  const ZERO = new F(0), ONE = new F(1);
+  const int = (x) => new F(BigInt(x));
+
+  /* ----- display helpers ----- */
+  const MINUS = '−';
+  function sig(x) {
+    // signed integer with a real minus sign
+    if (x === 0) return '0';
+    return (x < 0 ? MINUS : '+') + Math.abs(x);
+  }
+  function numTxt(x) { return x < 0 ? MINUS + Math.abs(x) : String(x); }
+  function fTxt(f) { return (f.n < 0n ? MINUS : '') + (f.n < 0n ? new F(-f.n, f.d).txt() : f.txt()); }
+  function fDec(f, dp) { const v = f.val(); const s = v.toFixed(dp === undefined ? 2 : dp); return s.replace('-', MINUS); }
+  function fBoth(f) { return f.d === 1n ? fTxt(f) : fTxt(f) + ' (≈ ' + fDec(f) + ')'; }
+
+  /* ---------------------------------------------------------------------
+     Linear form: a*x + b*(1-x)  ==  (a-b)x + b.  Render it the way you'd
+     write it on paper: "7 - 5q", "3q", "-4q + 1".
+     --------------------------------------------------------------------- */
+  function linear(a, b) { return { m: a - b, c: b }; }
+  function linTxt(L, v) {
+    const m = L.m, c = L.c;
+    if (m === 0) return numTxt(c);
+    const coef = Math.abs(m) === 1 ? '' : String(Math.abs(m));
+    const term = coef + v;
+    if (c === 0) return (m < 0 ? MINUS : '') + term;
+    if (m > 0) return numTxt(c) + ' + ' + term;
+    return numTxt(c) + ' ' + MINUS + ' ' + term;
+  }
+  function rawTxt(a, b, v) {
+    // "3·q + (-2)·(1-q)"
+    const A = a < 0 ? '(' + numTxt(a) + ')' : String(a);
+    const B = b < 0 ? '(' + numTxt(b) + ')' : String(b);
+    return A + '·' + v + ' + ' + B + '·(1' + MINUS + v + ')';
+  }
+  function evalLin(L, x) { return int(L.m).mul(x).add(int(L.c)); }
+
+  /* =====================================================================
+     The games
+     ===================================================================== */
+
+  const SCENARIOS = [
+    {
+      id: 'wrist',
+      title: 'The Sprained Wrist',
+      tagline: 'Rock, paper, scissors, minus two hands that work properly.',
+      unit: 'coins',
+      unitOne: 'coin',
+      per: 'per throw',
+      story: [
+        'Mara sprained a wrist in the semi-final and can no longer make a fist: <strong>paper or scissors</strong>. Kian’s splint works the other way round, so the fingers won’t straighten: <strong>rock or scissors</strong>.',
+        'The house pays by showmanship. Scissors cutting paper is the crowd’s favourite at <strong>3</strong>; paper wrapping rock is the classic reversal, also <strong>3</strong>; rock crushing scissors barely gets a clap at <strong>1</strong>. Two sets of scissors is a push.'
+      ],
+      row: { name: 'Kian', short: 'Kian', actions: [
+        { name: 'Rock', note: 'the only fist available' },
+        { name: 'Scissors', note: 'safe, cuts paper for 3' } ] },
+      col: { name: 'Mara', short: 'Mara', actions: [
+        { name: 'Paper', note: 'beats rock, dies to scissors' },
+        { name: 'Scissors', note: 'her low-risk hand' } ] },
+      theme: { bg: 'linear-gradient(145deg,#33383f 0%,#1b1f24 62%,#15181c 100%)', ink: '#f2ece0', acc: '#e8b23a' },
+      art: 'wrist',
+      stake: { purse: '200 throws, winner takes the bracket.', win: 'The better hand, all bracket.', lose: 'The other hand takes the bracket.' },
+      A: [[-3, 1], [3, 0]],
+      B: [[3, -1], [-3, 0]],
+      twist: 'Notice what the equilibrium does to Mara’s only winning hand. Paper is the <em>sole</em> move that beats anything Kian has, and it is supposed to appear about one throw in seven. It loses 3 to scissors and wins 3 against a rock Kian can simply stop throwing, so Mara cannot afford it. The weaker hand is the one that is harder to punish.'
+    },
+
+    {
+      id: 'toss',
+      title: 'The Loaded Toss',
+      tagline: 'A matching game on a wet pier, priced by a bookie with opinions.',
+      unit: 'coins',
+      unitOne: 'coin',
+      per: 'per toss',
+      story: [
+        'Deniz has slapped a coin onto the back of a hand for twenty years and can steer which face shows, so treat it as a <strong>choice</strong>, not a flip. Renz calls at the same moment and takes the pot on a match.',
+        'The pier bookie prices the four outcomes by crowd reaction, not symmetry: a heads match pays <strong>3</strong>, a tails match <strong>1</strong>. Deniz collects more for the bolder miss: <strong>2</strong> when the call was heads, <strong>1</strong> the other way round.'
+      ],
+      row: { name: 'Renz', short: 'Renz', actions: [
+        { name: 'Call heads', note: 'pays 3 on a match' },
+        { name: 'Call tails', note: 'pays 1 on a match' } ] },
+      col: { name: 'Deniz', short: 'Deniz', actions: [
+        { name: 'Show heads', note: '' },
+        { name: 'Show tails', note: '' } ] },
+      theme: { bg: 'linear-gradient(145deg,#1b4a58 0%,#0e2b36 58%,#081c24 100%)', ink: '#e4f1ef', acc: '#e0ab4d' },
+      art: 'toss',
+      stake: { purse: '200 tosses, one night on the pier.', win: 'The better call, all night.', lose: 'The other call owns the night.' },
+      A: [[3, -2], [-1, 1]],
+      B: [[-3, 2], [1, -1]],
+      twist: 'The game is worth <em>1/7 of a coin per toss</em> to Renz. That is a real edge, but a thin one, which is exactly why the mix has to be right. Drift a few percent off it and the edge is gone.'
+    },
+
+    {
+      id: 'penalty',
+      title: 'The Weak Foot',
+      tagline: 'One kick to win it, and a striker with a lopsided boot.',
+      unit: 'chances in 10',
+      unitOne: 'chance in 10',
+      per: 'per kick',
+      story: [
+        'Last kick of the shootout. Doru is heavily right-footed: the <strong>far post</strong> is the natural side, struck hard and clean, while the <strong>near post</strong> takes an awkward, slower shot off the outside of the boot. Vesna has to commit before the ball is hit.',
+        'Payoffs are Doru’s <strong>chances in 10 of scoring</strong>; Vesna gets the rest. Strong foot into an empty corner is near-certain (<strong>9</strong>) and still creeps past a keeper who guessed right (<strong>3</strong>). The weak-foot shot is poor even unopposed (<strong>7</strong>) and dies if it is read (<strong>2</strong>).'
+      ],
+      row: { name: 'Doru', short: 'Doru', actions: [
+        { name: 'Near post', note: 'weak side, outside of the boot' },
+        { name: 'Far post', note: 'strong side, struck clean' } ] },
+      col: { name: 'Vesna', short: 'Vesna', actions: [
+        { name: 'Cover near', note: '' },
+        { name: 'Cover far', note: '' } ] },
+      theme: { bg: 'linear-gradient(145deg,#1d5b3a 0%,#11402a 55%,#0a2a1b 100%)', ink: '#ecf6ee', acc: '#f0e259' },
+      art: 'penalty',
+      stake: { purse: '200 kicks across the season.', win: 'The better side, over the run.', lose: 'The other side scores more.' },
+      totalDiv: 10, totalUnit: 'goals',
+      A: [[2, 7], [9, 3]],
+      B: [[8, 3], [1, 7]],
+      twist: 'Doru shoots the <em>weak</em> side slightly more than half the time. That is not a mistake. The strong side is so dangerous unguarded that Vesna has to cover it 7 times in 11, which leaves the weak side open often enough to be worth the worse strike. The equilibrium reallocates attention, not skill.'
+    },
+
+    {
+      id: 'rooftop',
+      title: 'The Rooftop Set',
+      tagline: 'A band, a neighbour, and one shared Saturday night.',
+      unit: 'points',
+      unitOne: 'point',
+      per: 'for the night',
+      story: [
+        'Juno’s band has the roof until midnight. The <strong>loud set</strong> is the one the crowd came for; the <strong>quiet set</strong> is acoustic and forgettable. Ferran lives one floor down and can either ring the noise line or let it go.',
+        'Neither of them is playing for the other’s money, so <strong>the two payoff grids are unrelated</strong>. Each is just that person’s own score out of 10 for how the night went. Read each number off the player it belongs to.'
+      ],
+      row: { name: 'Juno', short: 'Juno', actions: [
+        { name: 'Loud set', note: 'what the crowd came for' },
+        { name: 'Quiet set', note: 'acoustic, no drums' } ] },
+      col: { name: 'Ferran', short: 'Ferran', actions: [
+        { name: 'Ring the noise line', note: 'ends it, costs some goodwill' },
+        { name: 'Let it go', note: '' } ] },
+      theme: { bg: 'linear-gradient(145deg,#2f2a5c 0%,#1d1a3d 58%,#121028 100%)', ink: '#e9e8ff', acc: '#6fd3c0' },
+      art: 'rooftop',
+      stake: { purse: '200 Saturdays on the same block.', win: 'The better call, all summer.', lose: 'The other call went better.' },
+      A: [[1, 9], [4, 5]],
+      B: [[6, 2], [3, 8]],
+      twist: 'This is the one that cannot happen in a constant-sum game. At equilibrium Juno averages <em>31/7 ≈ 4.43</em> and Ferran <em>14/3 ≈ 4.67</em>. Now look at the quiet-set, let-it-go cell: <em>5 and 8</em>. Both of them do strictly better there than the equilibrium gives either one, and it still falls apart, because Juno would switch to the loud set the moment Ferran relaxed. When the payoffs are genuinely unrelated, equilibrium is a place neither player would have chosen.'
+    },
+
+    {
+      id: 'inspector',
+      title: 'The Ticket Inspector',
+      tagline: 'A night tram, a 3€ fare, and two people doing sums.',
+      unit: '€',
+      unitOne: '€',
+      per: 'per ride',
+      story: [
+        'The fare is <strong>3€</strong> and getting caught without one costs <strong>12€</strong>. Ada either buys a ticket or chances it.',
+        'Sena never sees that fine, which goes to the transit authority. The bonus is <strong>5€</strong> per fare-dodger caught, and working a carriage costs about <strong>2€</strong> of time whether or not anyone is found. So the fine sits in Ada’s payoffs and nowhere else. Watch what that does.'
+      ],
+      row: { name: 'Ada', short: 'Ada', actions: [
+        { name: 'Dodge', note: 'free ride, or a 12€ fine' },
+        { name: 'Buy a ticket', note: 'costs 3€ either way' } ] },
+      col: { name: 'Sena', short: 'Sena', actions: [
+        { name: 'Check the carriage', note: '2€ of effort, 5€ per catch' },
+        { name: 'Wave it through', note: '' } ] },
+      theme: { bg: 'linear-gradient(145deg,#4a2e1c 0%,#2b1a10 58%,#1c1109 100%)', ink: '#f5e8d8', acc: '#eb8f43', holeFill: '#291810' },
+      art: 'inspector',
+      stake: { purse: '200 night rides.', win: 'The better call, over the season.', lose: 'The other call pays more.' },
+      A: [[-12, 0], [-3, -3]],
+      B: [[3, 0], [-2, 0]],
+      twist: 'Now double the fine to 24€ and re-solve. Dodging does <em>not</em> fall. It stays at exactly 2/5. Only Sena changes, dropping from checking 1/4 of the time to 1/8. The fine appears only in Ada’s payoffs, and Ada’s mix is pinned by <em>Sena’s</em> payoffs, which nobody touched. A tougher penalty bought less enforcement, not less fare-dodging.'
+    }
+  ];
+
+  /* =====================================================================
+     Solver
+     ===================================================================== */
+
+  // Re-express the game from one side's point of view, so the rest of the
+  // code can always assume "me = the row player".
+  function perspective(sc, side) {
+    if (side === 'row') {
+      return { A: sc.A, B: sc.B, me: sc.row, them: sc.col };
+    }
+    return {
+      A: [[sc.B[0][0], sc.B[1][0]], [sc.B[0][1], sc.B[1][1]]],
+      B: [[sc.A[0][0], sc.A[1][0]], [sc.A[0][1], sc.A[1][1]]],
+      me: sc.col, them: sc.row
+    };
+  }
+
+  function pureEquilibria(A, B) {
+    const out = [];
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (A[i][j] >= A[1 - i][j] && B[i][j] >= B[i][1 - j]) out.push([i, j]);
+      }
+    }
+    return out;
+  }
+
+  function solve(A, B) {
+    // q* : their mix over THEIR action 0, set so that I am indifferent.
+    const qd = A[0][0] - A[0][1] - A[1][0] + A[1][1];
+    const qn = A[1][1] - A[0][1];
+    // p* : my mix over MY action 0, set so that THEY are indifferent.
+    const pd = B[0][0] - B[1][0] - B[0][1] + B[1][1];
+    const pn = B[1][1] - B[1][0];
+    if (qd === 0 || pd === 0) throw new Error('degenerate game: no interior equilibrium');
+    const q = new F(qn, qd);
+    const p = new F(pn, pd);
+    if (!(p.gt(ZERO) && p.lt(ONE) && q.gt(ZERO) && q.lt(ONE))) {
+      throw new Error('equilibrium is not interior');
+    }
+    const myRow0 = linear(A[0][0], A[0][1]);   // my payoff from my action 0, as a function of q
+    const myRow1 = linear(A[1][0], A[1][1]);
+    const theirCol0 = linear(B[0][0], B[1][0]); // their payoff from their action 0, as a function of p
+    const theirCol1 = linear(B[0][1], B[1][1]);
+    return {
+      p: p, q: q,
+      myRow0: myRow0, myRow1: myRow1,
+      theirCol0: theirCol0, theirCol1: theirCol1,
+      value: evalLin(myRow0, q),
+      pure: pureEquilibria(A, B)
+    };
+  }
+
+  function constantSum(sc) {
+    const s = sc.A[0][0] + sc.B[0][0];
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) {
+      if (sc.A[i][j] + sc.B[i][j] !== s) return null;
+    }
+    return s;
+  }
+
+  /* ----- integrity check: a broken scenario must fail loudly, not teach
+     something false ----- */
+  function audit() {
+    const problems = [];
+    SCENARIOS.forEach(function (sc) {
+      ['row', 'col'].forEach(function (side) {
+        const g = perspective(sc, side);
+        try {
+          const s = solve(g.A, g.B);
+          if (s.pure.length) problems.push(sc.id + '/' + side + ': has a pure equilibrium');
+        } catch (e) {
+          problems.push(sc.id + '/' + side + ': ' + e.message);
+        }
+      });
+      sc.constSum = constantSum(sc);
+    });
+    return problems;
+  }
+
+  /* =====================================================================
+     Drill construction
+     ===================================================================== */
+
+  // The mode name must not name the answer: "Hold the Line" told you what to do
+  // in the badge at the top of the screen.
+  const MODES = {
+    exploit: { label: 'Read the Play', badge: 'Read the Play' },
+    defend: { label: 'The Long Game', badge: 'The Long Game' }
+  };
+
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  // The scouting report. Multiples of 1/20 so it reads like a real number and
+  // stays exact; kept a clear distance from q* so the best reply is unambiguous.
+  function scoutingMix(qstar) {
+    const wide = [], near = [];
+    for (let k = 1; k < 20; k++) {
+      const c = new F(k, 20);
+      const d = Math.abs(c.val() - qstar.val());
+      if (d >= 0.12) wide.push(c);
+      else if (d >= 0.06) near.push(c);
+    }
+    const pool = wide.length ? wide : (near.length ? near : [new F(1, 4)]);
+    return pick(pool);
+  }
+
+  function newRound(scId, side, mode) {
+    let sc = scId === 'any' ? pick(SCENARIOS) : SCENARIOS.find(function (s) { return s.id === scId; });
+    if (!sc) sc = SCENARIOS[0];
+
+    let m = mode;
+    if (m === 'any') m = sc.constSum === null ? 'exploit' : pick(['exploit', 'defend']);
+    if (m === 'defend' && sc.constSum === null) m = 'exploit';
+
+    const sd = side === 'any' ? pick(['row', 'col']) : side;
+    const g = perspective(sc, sd);
+    const sol = solve(g.A, g.B);
+
+    const r = {
+      sc: sc, side: sd, mode: m, g: g, sol: sol,
+      step: 1, scoreQ: 0, scoreP: 0, scoreD: 0
+    };
+
+    // Both drills hand out a scouting report, because both now turn on
+    // comparing the opponent's real behaviour against their equilibrium mix.
+    // Roughly one Read-the-Play drill in six puts them exactly on it: that
+    // round is the whole lesson, since nothing you pick is any better.
+    r.onEq = m === 'exploit' && Math.random() < 1 / 6;
+    r.oppMix = r.onEq ? sol.q : scoutingMix(sol.q);
+    r.ev0 = evalLin(sol.myRow0, r.oppMix);
+    r.ev1 = evalLin(sol.myRow1, r.oppMix);
+    r.best = r.ev0.eq(r.ev1) ? -1 : (r.ev0.gt(r.ev1) ? 0 : 1);
+
+    r.meVsCol = [meVsCol(g, 0), meVsCol(g, 1)];
+    // If you abandon mixing and go pure, this is what an adapted opponent
+    // holds you to -- the worst column of that row.
+    r.pureFloor = [
+      Math.min(g.A[0][0], g.A[0][1]),
+      Math.min(g.A[1][0], g.A[1][1])
+    ];
+    r.pureFloorCol = [
+      g.A[0][0] <= g.A[0][1] ? 0 : 1,
+      g.A[1][0] <= g.A[1][1] ? 0 : 1
+    ];
+    return r;
+  }
+
+  /* =====================================================================
+     Marquee artwork. One emblem per game, drawn from that game's own props.
+     Decorative only -- the band carries the title in real text.
+     ===================================================================== */
+
+  // Hand shapes for the street bracket, so the emblem states the constraint
+  // the story just described: which hands each player can actually form.
+  function hand(kind, x, y, s, on) {
+    const o = on ? '1' : '.22';
+    const w = 'stroke-width="' + (2.4 / s).toFixed(2) + '"';
+    let body;
+    if (kind === 'rock') {
+      body = '<circle cx="0" cy="0" r="11" fill="none" ' + w + '/>' +
+        '<path d="M-6-4 L-1-6 M1-7 L6-4 M-5 4 L0 6 M2 6 L6 3" fill="none" ' + w + ' stroke-linecap="round"/>';
+    } else if (kind === 'paper') {
+      body = '<path d="M-9-12 H4 L9-7 V12 H-9 Z" fill="none" ' + w + ' stroke-linejoin="round"/>' +
+        '<path d="M4-12 V-7 H9" fill="none" ' + w + ' stroke-linejoin="round"/>';
+    } else {
+      body = '<path d="M-8-12 L5 6 M8-12 L-5 6" fill="none" ' + w + ' stroke-linecap="round"/>' +
+        '<circle cx="-7" cy="9" r="4" fill="none" ' + w + '/><circle cx="7" cy="9" r="4" fill="none" ' + w + '/>';
+    }
+    const cross = on ? '' :
+      '<path d="M-13-13 L13 13" fill="none" ' + w + ' stroke-linecap="round"/>';
+    return '<g transform="translate(' + x + ',' + y + ') scale(' + s + ')" opacity="' + o + '">' + body + cross + '</g>';
+  }
+
+  const ART = {
+    wrist: function (t) {
+      const A = t.acc, I = t.ink;
+      return '<svg class="art" viewBox="0 0 190 124" aria-hidden="true">' +
+        '<g stroke="' + I + '">' +
+        hand('rock', 98, 34, 1, true) + hand('paper', 134, 34, 1, false) + hand('scissors', 170, 34, 1, true) +
+        '</g><g stroke="' + A + '">' +
+        hand('rock', 98, 88, 1, false) + hand('paper', 134, 88, 1, true) + hand('scissors', 170, 88, 1, true) +
+        '</g>' +
+        '<text x="10" y="39" font-family="\'Libre Franklin\',sans-serif" font-size="11" font-weight="600" letter-spacing="1.6" fill="' + I + '">KIAN</text>' +
+        '<text x="10" y="93" font-family="\'Libre Franklin\',sans-serif" font-size="11" font-weight="600" letter-spacing="1.6" fill="' + A + '">MARA</text>' +
+        '<line x1="10" y1="61" x2="180" y2="61" stroke="' + I + '" stroke-width="1" opacity=".25"/>' +
+        '</svg>';
+    },
+    toss: function (t) {
+      const A = t.acc, I = t.ink;
+      return '<svg class="art" viewBox="0 0 190 124" aria-hidden="true">' +
+        '<g stroke="' + I + '" stroke-width="1" opacity=".3" stroke-linecap="round">' +
+        '<path d="M22 6 L12 34 M52 2 L42 30 M150 8 L140 36 M176 4 L166 32"/></g>' +
+        '<g fill="none" stroke="' + I + '" stroke-width="1.4" opacity=".45" stroke-linecap="round">' +
+        '<path d="M64 34 A34 24 0 0 1 126 34"/><path d="M58 46 A42 30 0 0 1 132 46"/></g>' +
+        '<ellipse cx="95" cy="72" rx="36" ry="31" fill="none" stroke="' + A + '" stroke-width="3"/>' +
+        '<ellipse cx="95" cy="72" rx="28" ry="23.5" fill="none" stroke="' + A + '" stroke-width="1.2" opacity=".6"/>' +
+        '<text x="95" y="81" text-anchor="middle" font-family="\'Zilla Slab\',serif" font-size="27" font-weight="700" fill="' + A + '">H</text>' +
+        '<path d="M14 112 H176" stroke="' + I + '" stroke-width="2" opacity=".5"/>' +
+        '<path d="M26 112 V122 M62 112 V122 M98 112 V122 M134 112 V122 M170 112 V122" stroke="' + I + '" stroke-width="1.5" opacity=".28"/>' +
+        '</svg>';
+    },
+    penalty: function (t) {
+      const A = t.acc, I = t.ink;
+      let net = '';
+      for (let x = 34; x <= 156; x += 15.25) net += '<line x1="' + x + '" y1="26" x2="' + x + '" y2="84"/>';
+      for (let y = 26; y <= 84; y += 14.5) net += '<line x1="26" y1="' + y + '" x2="164" y2="' + y + '"/>';
+      return '<svg class="art" viewBox="0 0 190 124" aria-hidden="true">' +
+        '<g stroke="' + I + '" stroke-width=".7" opacity=".28">' + net + '</g>' +
+        '<path d="M26 84 V26 H164 V84" fill="none" stroke="' + I + '" stroke-width="3.2" stroke-linejoin="round"/>' +
+        '<path d="M14 84 H176" stroke="' + I + '" stroke-width="2" opacity=".55"/>' +
+        '<path d="M95 108 C 78 104 52 96 36 84" fill="none" stroke="' + A + '" stroke-width="2" stroke-dasharray="4 3.5" opacity=".55"/>' +
+        '<path d="M95 108 C 122 102 145 94 154 84" fill="none" stroke="' + A + '" stroke-width="2.4" stroke-dasharray="4 3.5"/>' +
+        '<circle cx="36" cy="80" r="5" fill="none" stroke="' + A + '" stroke-width="2" opacity=".55"/>' +
+        '<circle cx="154" cy="80" r="5" fill="' + A + '"/>' +
+        '<circle cx="95" cy="110" r="7.5" fill="none" stroke="' + I + '" stroke-width="2.2"/>' +
+        '<path d="M95 102.5 L99 108 L95 113 L91 108 Z" fill="' + I + '"/>' +
+        '</svg>';
+    },
+    rooftop: function (t) {
+      const A = t.acc, I = t.ink;
+      let arcs = '';
+      [[30, 75, 58.7, 97.3], [44, 85.7, 49.7, 106.3], [58, 96.4, 40.7, 115.3]].forEach(function (a, i) {
+        arcs += '<path d="M' + a[1] + ' ' + a[2] + ' A' + a[0] + ' ' + a[0] + ' 0 0 1 ' + a[1] + ' ' + a[3] +
+          '" fill="none" stroke="' + A + '" stroke-width="2.2" stroke-linecap="round" opacity="' + (0.9 - i * 0.24).toFixed(2) + '"/>';
+      });
+      return '<svg class="art" viewBox="0 0 190 124" aria-hidden="true">' +
+        '<rect x="140" y="26" width="42" height="84" fill="none" stroke="' + I + '" stroke-width="2.2" opacity=".55"/>' +
+        '<rect x="149" y="38" width="11" height="14" fill="' + A + '"/>' +
+        '<rect x="166" y="38" width="11" height="14" fill="' + I + '" opacity=".18"/>' +
+        '<rect x="149" y="62" width="11" height="14" fill="' + I + '" opacity=".18"/>' +
+        '<rect x="166" y="62" width="11" height="14" fill="' + I + '" opacity=".18"/>' +
+        arcs +
+        '<rect x="20" y="60" width="32" height="38" rx="2" fill="none" stroke="' + I + '" stroke-width="2.4"/>' +
+        '<circle cx="36" cy="79" r="9" fill="none" stroke="' + I + '" stroke-width="2.2"/>' +
+        '<circle cx="36" cy="79" r="3" fill="' + I + '"/>' +
+        '<line x1="8" y1="110" x2="182" y2="110" stroke="' + I + '" stroke-width="2" opacity=".5"/>' +
+        '</svg>';
+    },
+    inspector: function (t) {
+      const A = t.acc, I = t.ink;
+      return '<svg class="art" viewBox="0 0 190 124" aria-hidden="true">' +
+        '<g fill="none" stroke="' + I + '" stroke-width="1.6" opacity=".32">' +
+        '<rect x="16" y="10" width="34" height="26" rx="2"/><rect x="58" y="10" width="34" height="26" rx="2"/>' +
+        '<rect x="100" y="10" width="34" height="26" rx="2"/><rect x="142" y="10" width="34" height="26" rx="2"/></g>' +
+        '<g transform="translate(0,6)">' +
+        '<path d="M26 56 H164 V108 H26 Z" fill="none" stroke="' + A + '" stroke-width="2.6" stroke-linejoin="round"/>' +
+        '<circle cx="26" cy="82" r="7" fill="' + t.holeFill + '" stroke="' + A + '" stroke-width="2.6"/>' +
+        '<circle cx="164" cy="82" r="7" fill="' + t.holeFill + '" stroke="' + A + '" stroke-width="2.6"/>' +
+        '<line x1="126" y1="58" x2="126" y2="106" stroke="' + A + '" stroke-width="1.6" stroke-dasharray="3 4"/>' +
+        '<circle cx="145" cy="82" r="8" fill="none" stroke="' + A + '" stroke-width="2" opacity=".75"/>' +
+        '<g stroke="' + I + '" stroke-width="2.4" stroke-linecap="round" opacity=".6">' +
+        '<line x1="42" y1="72" x2="104" y2="72"/><line x1="42" y1="82" x2="88" y2="82"/><line x1="42" y1="92" x2="96" y2="92"/></g>' +
+        '</g></svg>';
+    }
+  };
+
+  /* =====================================================================
+     Input parsing
+     ===================================================================== */
+
+  function parseMix(raw) {
+    let s = String(raw == null ? '' : raw).trim().replace(/\s+/g, '').replace(',', '.');
+    if (!s) return { err: 'Type a probability first.' };
+    let pct = false;
+    if (s.slice(-1) === '%') { pct = true; s = s.slice(0, -1); }
+    let f = null, m;
+    if ((m = s.match(/^(\d+)\/(\d+)$/))) {
+      if (m[2] === '0' || /^0+$/.test(m[2])) return { err: 'That denominator is zero.' };
+      f = new F(BigInt(m[1]), BigInt(m[2]));
+    } else if ((m = s.match(/^(\d*)\.(\d+)$/))) {
+      f = new F(BigInt((m[1] || '0') + m[2]), BigInt('1' + '0'.repeat(m[2].length)));
+    } else if ((m = s.match(/^(\d+)$/))) {
+      f = new F(BigInt(m[1]));
+    } else {
+      return { err: 'Use a fraction (3/7), a decimal (0.43), or a percentage (43%).' };
+    }
+    if (pct) f = f.div(new F(100));
+    else if (f.gt(ONE)) f = f.div(new F(100)); // "43" plainly means 43%
+    if (f.lt(ZERO) || f.gt(ONE)) return { err: 'A probability has to sit between 0 and 1.' };
+    return { f: f };
+  }
+
+  /* =====================================================================
+     Scoring
+     ===================================================================== */
+
+  const STORE_KEY = 'indifference-drill-v1';
+  let stats = { score: 0, drills: 0, streak: 0 };
+
+  function loadStats() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o && typeof o.score === 'number') stats = { score: o.score | 0, drills: o.drills | 0, streak: o.streak | 0 };
+      }
+    } catch (e) { /* private window, blocked storage: run without it */ }
+  }
+  function saveStats() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(stats)); } catch (e) { /* ignore */ }
+  }
+  function paintStats() {
+    document.getElementById('s-score').textContent = stats.score;
+    document.getElementById('s-drills').textContent = stats.drills;
+    document.getElementById('s-streak').textContent = stats.streak;
+  }
+
+  /* =====================================================================
+     Charts -- two straight lines over [0,1] and the envelope between them
+     ===================================================================== */
+
+  function envelopeChart(opts) {
+    const W = 620, H = 300, L = 54, R = 20, T = 20, B = 54;
+    const lines = opts.lines;
+    const ys = [];
+    lines.forEach(function (l) { ys.push(l.y0, l.y1); });
+    let lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+    if (hi - lo < 1e-9) { hi += 1; lo -= 1; }
+    const pad = (hi - lo) * 0.18;
+    lo -= pad; hi += pad;
+
+    const X = function (x) { return L + x * (W - L - R); };
+    const Y = function (y) { return T + (1 - (y - lo) / (hi - lo)) * (H - T - B); };
+    const at = function (l, x) { return l.y0 + x * (l.y1 - l.y0); };
+
+    const parts = [];
+    parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opts.alt || '') + '" font-family="\'IBM Plex Mono\', monospace">');
+
+    // horizontal grid
+    const ticks = 4;
+    for (let i = 0; i <= ticks; i++) {
+      const v = lo + (hi - lo) * i / ticks;
+      const y = Y(v);
+      parts.push('<line x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1) + '" style="stroke:var(--line)" stroke-width="1"/>');
+      parts.push('<text x="' + (L - 8) + '" y="' + (y + 3.5).toFixed(1) + '" text-anchor="end" font-size="11" style="fill:var(--ink-3)">' + v.toFixed(1).replace('-', MINUS) + '</text>');
+    }
+    // zero line, when it's in frame
+    if (lo < 0 && hi > 0) {
+      parts.push('<line x1="' + L + '" y1="' + Y(0).toFixed(1) + '" x2="' + (W - R) + '" y2="' + Y(0).toFixed(1) + '" style="stroke:var(--line-2)" stroke-width="1.5" stroke-dasharray="1 3"/>');
+    }
+    // x axis
+    parts.push('<line x1="' + L + '" y1="' + Y(lo).toFixed(1) + '" x2="' + (W - R) + '" y2="' + Y(lo).toFixed(1) + '" style="stroke:var(--ink-3)" stroke-width="1"/>');
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
+      parts.push('<text x="' + X(t).toFixed(1) + '" y="' + (H - B + 18) + '" text-anchor="middle" font-size="11" style="fill:var(--ink-3)">' + t + '</text>');
+    });
+    parts.push('<text x="' + ((L + W - R) / 2).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="11.5" font-family="\'Libre Franklin\', sans-serif" style="fill:var(--ink-2)">' + esc(opts.xLabel) + '</text>');
+
+    // the envelope, drawn thick underneath the lines
+    const star = opts.star.val();
+    const ystar = at(lines[0], star);
+    const e0 = opts.envelope === 'upper' ? Math.max(lines[0].y0, lines[1].y0) : Math.min(lines[0].y0, lines[1].y0);
+    const e1 = opts.envelope === 'upper' ? Math.max(lines[0].y1, lines[1].y1) : Math.min(lines[0].y1, lines[1].y1);
+    parts.push('<polyline points="' + X(0).toFixed(1) + ',' + Y(e0).toFixed(1) + ' ' + X(star).toFixed(1) + ',' + Y(ystar).toFixed(1) + ' ' + X(1).toFixed(1) + ',' + Y(e1).toFixed(1) + '" fill="none" style="stroke:var(--you)" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" opacity="0.18"/>');
+
+    // the two payoff lines
+    lines.forEach(function (l) {
+      parts.push('<line x1="' + X(0).toFixed(1) + '" y1="' + Y(l.y0).toFixed(1) + '" x2="' + X(1).toFixed(1) + '" y2="' + Y(l.y1).toFixed(1) + '" style="stroke:' + l.color + '" stroke-width="2.25" stroke-linecap="round"/>');
+    });
+
+    // equilibrium threshold
+    parts.push('<line x1="' + X(star).toFixed(1) + '" y1="' + Y(hi).toFixed(1) + '" x2="' + X(star).toFixed(1) + '" y2="' + Y(lo).toFixed(1) + '" style="stroke:var(--ink-3)" stroke-width="1" stroke-dasharray="4 3"/>');
+    parts.push('<circle cx="' + X(star).toFixed(1) + '" cy="' + Y(ystar).toFixed(1) + '" r="4" style="fill:var(--surface);stroke:var(--ink)" stroke-width="1.75"/>');
+    const sLabelAnchor = star > 0.7 ? 'end' : 'start';
+    const sdx = star > 0.7 ? -7 : 7;
+    parts.push('<text x="' + (X(star) + sdx).toFixed(1) + '" y="' + (T + 12) + '" text-anchor="' + sLabelAnchor + '" font-size="12" font-weight="600" style="fill:var(--ink)">' + esc(opts.starLabel) + '</text>');
+
+    // where the drill actually sits
+    if (opts.mark !== undefined && opts.mark !== null) {
+      const mk = opts.mark.val();
+      const my = opts.envelope === 'upper'
+        ? Math.max(at(lines[0], mk), at(lines[1], mk))
+        : Math.min(at(lines[0], mk), at(lines[1], mk));
+      parts.push('<line x1="' + X(mk).toFixed(1) + '" y1="' + Y(hi).toFixed(1) + '" x2="' + X(mk).toFixed(1) + '" y2="' + Y(lo).toFixed(1) + '" style="stroke:var(--you)" stroke-width="1.5"/>');
+      parts.push('<circle cx="' + X(mk).toFixed(1) + '" cy="' + Y(my).toFixed(1) + '" r="5" style="fill:var(--you)"/>');
+      const mAnchor = mk > 0.7 ? 'end' : 'start';
+      const mdx = mk > 0.7 ? -8 : 8;
+      parts.push('<text x="' + (X(mk) + mdx).toFixed(1) + '" y="' + (Y(my) - 11).toFixed(1) + '" text-anchor="' + mAnchor + '" font-size="12" font-weight="600" style="fill:var(--you)">' + esc(opts.markLabel) + '</text>');
+    }
+
+    parts.push('</svg>');
+    return parts.join('');
+  }
+
+  /* =====================================================================
+     Rendering
+     ===================================================================== */
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  let R = null;
+  const host = document.getElementById('drill');
+
+  function payoffTable(r, litCell) {
+    const sc = r.sc, g = r.g;
+    const rows = [];
+    for (let i = 0; i < 2; i++) {
+      const cells = [];
+      for (let j = 0; j < 2; j++) {
+        const lit = litCell && litCell[0] === i && litCell[1] === j ? ' lit' : '';
+        cells.push(
+          '<td class="cell' + lit + '"><div class="pay">' +
+          '<span class="p-you num">' + sig(g.A[i][j]) + '</span>' +
+          '<span class="p-them num">' + sig(g.B[i][j]) + '</span>' +
+          '</div></td>'
+        );
+      }
+      rows.push('<tr><th scope="row">' + esc(g.me.actions[i].name) +
+        (g.me.actions[i].note ? '<span class="note">' + esc(g.me.actions[i].note) + '</span>' : '') +
+        '</th>' + cells.join('') + '</tr>');
+    }
+    const heads = [0, 1].map(function (j) {
+      return '<th scope="col">' + esc(g.them.actions[j].name) +
+        (g.them.actions[j].note ? '<span class="note">' + esc(g.them.actions[j].note) + '</span>' : '') + '</th>';
+    }).join('');
+
+    return '<div class="board">' +
+      '<div class="table-wrap"><table class="payoff">' +
+      '<thead><tr><td class="corner"><span class="cor-them">' + esc(g.them.name) + ' →</span><span class="cor-you">↓ ' + esc(g.me.name) + '</span></td>' + heads + '</tr></thead>' +
+      '<tbody>' + rows.join('') + '</tbody></table></div>' +
+      '<p class="board-caption">' +
+      '<span class="swatch"><i style="background:var(--you)"></i> your payoff</span>' +
+      '<span class="swatch"><i style="background:var(--them)"></i> ' + esc(g.them.name) + '’s payoff</span>' +
+      '<span>' + esc(sc.unit) + ' ' + esc(sc.per) + '</span>' +
+      (sc.constSum !== null ? '<span>constant-sum: every cell totals ' + sc.constSum + '</span>' : '<span>not constant-sum</span>') +
+      '</p></div>';
+  }
+
+  function sceneBlock(r) {
+    const sc = r.sc, g = r.g, t = sc.theme;
+    const band =
+      '<div class="band" style="--band-bg:' + t.bg + ';--band-ink:' + t.ink + ';--band-acc:' + t.acc + '">' +
+      '<div>' +
+      '<p class="eyebrow">' + esc(MODES[r.mode].badge) + '</p>' +
+      '<h2>' + esc(sc.title) + '</h2>' +
+      '<p class="tagline">' + sc.tagline + '</p>' +
+      '<p class="stake"><b>At stake:</b> ' + esc(sc.stake.purse) + '</p>' +
+      '</div>' +
+      ART[sc.art](t) +
+      '</div>';
+
+    return band + '<div class="scene">' +
+      '<div class="story">' + sc.story.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</div>' +
+      '<div class="roles">' +
+      '<span class="role you">You are <b>' + esc(g.me.name) + '</b></span>' +
+      '<span class="role them">Against <b>' + esc(g.them.name) + '</b></span>' +
+      '<span class="role mode">' + esc(MODES[r.mode].badge) + '</span>' +
+      '</div></div>';
+  }
+
+  /* ----- screen chrome -----
+     One stage on screen at a time. Screen 1 carries the full marquee and the
+     story; screens 2 and 3 drop to a slim strip, because by then you know
+     which game you are in and the matrix is what you actually need. */
+
+  function stepsBar(n) {
+    return '<ol class="steps">' + ['Solve', 'Play', 'Result'].map(function (l, i) {
+      const s = i + 1 < n ? 'done' : (i + 1 === n ? 'on' : '');
+      return '<li class="' + s + '"><b>' + (i + 1) + '</b> ' + l + '</li>';
+    }).join('') + '</ol>';
+  }
+
+  function slimBar(r) {
+    return '<div class="slim" style="--band-acc:' + r.sc.theme.acc + '">' +
+      '<p class="slim-title">' + esc(r.sc.title) + '</p>' +
+      '<p class="slim-sub">You are <b>' + esc(r.g.me.name) + '</b> · against ' + esc(r.g.them.name) + ' · ' + esc(MODES[r.mode].badge) + '</p>' +
+      '</div>';
+  }
+
+  function render() {
+    const r = R;
+    host.innerHTML = stepsBar(1) + sceneBlock(r) + payoffTable(r) + stepSolve(r);
+    wireStep();
+  }
+
+  function scoutBlock(r) {
+    const g = r.g;
+    const extra = r.mode === 'exploit' ? '' :
+      '<p class="intel-sub">They adapt to anything you repeat.</p>';
+    return '<div class="intel">' +
+      '<p class="eyebrow">Scouting report</p>' +
+      '<p class="big">' + esc(g.them.name) + ' plays <strong>' + esc(g.them.actions[0].name) + '</strong> ' +
+      '<span class="num">' + r.oppMix.txt() + '</span> of the time (<span class="num">' + r.oppMix.pct() + '</span>).</p>' +
+      extra + '</div>';
+  }
+
+  function stepSolve(r) {
+    const g = r.g;
+    return '<section class="step">' +
+      '<h3>Solve the game</h3>' +
+      '<p class="ask">Both mixes. You will need them in a moment.</p>' +
+      '<div class="duo">' +
+      '<div class="field">' +
+      '<label for="ansP"><span class="tag-you">p*</span> How often <b>you</b> play ' + esc(g.me.actions[0].name.toLowerCase()) + '</label>' +
+      '<input type="text" id="ansP" inputmode="text" autocomplete="off" placeholder="e.g. 3/7">' +
+      '<p class="micro">Comes out of <strong>' + esc(g.them.name) + '’s</strong> payoffs (the teal numbers).</p>' +
+      '</div>' +
+      '<div class="field">' +
+      '<label for="ansQ"><span class="tag-them">q*</span> How often <b>' + esc(g.them.name) + '</b> plays ' + esc(g.them.actions[0].name.toLowerCase()) + '</label>' +
+      '<input type="text" id="ansQ" inputmode="text" autocomplete="off" placeholder="e.g. 2/5">' +
+      '<p class="micro">Comes out of <strong>your</strong> payoffs (the amber numbers).</p>' +
+      '</div>' +
+      '</div>' +
+      '<div class="answer-row" style="margin-top:14px"><button class="btn" id="go" type="button">Check both</button></div>' +
+      '<p class="hint">Fractions, decimals or percentages. Exact fractions score a bonus.</p>' +
+      '</section>';
+  }
+
+  function stepDecision(r) {
+    const g = r.g;
+    const btns = [0, 1].map(function (i) {
+      return '<button class="choice" type="button" data-act="' + i + '">' +
+        '<b>' + esc(g.me.actions[i].name) + '</b>' +
+        '<span>' + esc(g.me.actions[i].note || ' ') + '</span></button>';
+    }).join('');
+    return '<section class="step">' +
+      scoutBlock(r) +
+      '<h3>Which do you play?</h3>' +
+      '<div class="choices">' + btns + '</div>' +
+      '</section>';
+  }
+
+  function stepHold(r) {
+    const g = r.g;
+    const opt = function (v, title, note) {
+      return '<button class="choice" type="button" data-hold="' + v + '"><b>' + title + '</b><span>' + note + '</span></button>';
+    };
+    return '<section class="step">' +
+      scoutBlock(r) +
+      '<h3>How do you play the next 200?</h3>' +
+      '<div class="choices choices-3">' +
+      opt('0', esc(g.me.actions[0].name) + ', every time', 'Commit to one action and take what it pays.') +
+      opt('1', esc(g.me.actions[1].name) + ', every time', 'Commit to one action and take what it pays.') +
+      opt('mix', 'Keep mixing at p*', 'Whatever p* you worked out, stick to it.') +
+      '</div>' +
+      '</section>';
+  }
+
+  function wireStep() {
+    const go = document.getElementById('go');
+    if (go) {
+      go.addEventListener('click', submitSolve);
+      const ins = [document.getElementById('ansP'), document.getElementById('ansQ')];
+      ins.forEach(function (el) {
+        if (!el) return;
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter') submitSolve(); });
+      });
+      if (ins[0]) ins[0].focus({ preventScroll: true });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.choice'), function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.hold !== undefined) submitHold(b.dataset.hold);
+        else submitDecision(parseInt(b.dataset.act, 10));
+      });
+    });
+    const nx = document.getElementById('next');
+    if (nx) nx.addEventListener('click', function () { deal(); });
+  }
+
+  /* ----- diagnosing a wrong answer is where most of the teaching is ----- */
+  function diagnose(ans, want, other, r, askedFor) {
+    const g = r.g;
+    const near = function (a, b) { return Math.abs(a.val() - b.val()) < 0.006; };
+    const comp = ONE.sub(want);
+    if (near(ans, comp)) {
+      return 'Right arithmetic, wrong action. ' + fTxt(comp) + ' is the probability of ' +
+        (askedFor === 'theirs' ? esc(g.them.actions[1].name.toLowerCase()) : esc(g.me.actions[1].name.toLowerCase())) +
+        '. The question asked for the other one.';
+    }
+    if (near(ans, other)) {
+      return askedFor === 'theirs'
+        ? 'That is <em>your</em> equilibrium mix, not theirs. You got there by making ' + esc(g.them.name) + ' indifferent. The threshold you need is the other direction: the mix of theirs that makes <em>you</em> indifferent, which comes out of <em>your</em> payoffs.'
+        : 'That is <em>their</em> mix, not yours. Your own mix is pinned by <em>their</em> payoffs: pick the p that leaves ' + esc(g.them.name) + ' unable to prefer either reply.';
+    }
+    if (near(ans, ONE.sub(other))) {
+      return 'That is the complement of the <em>other</em> player’s mix, two wires crossed at once. Solve for the mix that makes ' +
+        (askedFor === 'theirs' ? 'you' : esc(g.them.name)) + ' indifferent, then read off the probability the question asked for.';
+    }
+    return null;
+  }
+
+  function submitSolve() {
+    const r = R;
+    const rp = parseMix(document.getElementById('ansP').value);
+    const rq = parseMix(document.getElementById('ansQ').value);
+    if (rp.err) { flash(rp.err, 'ansP'); return; }
+    if (rq.err) { flash(rq.err, 'ansQ'); return; }
+    gradeSolve(r, rp.f, rq.f);
+  }
+
+  function flash(msg, which) {
+    let el = document.getElementById('flash');
+    if (!el) {
+      el = document.createElement('p');
+      el.id = 'flash';
+      el.className = 'hint';
+      el.style.color = 'var(--bad)';
+      document.querySelector('.step').appendChild(el);
+    }
+    el.textContent = msg;
+    const f = document.getElementById(which);
+    if (f) f.focus({ preventScroll: true });
+  }
+
+  function gradeOne(ans, want, other, r, askedFor) {
+    const err = Math.abs(ans.val() - want.val());
+    if (ans.eq(want)) return { pts: 40, tone: 'ok', tag: 'Exact', note: 'Dead on the fraction.' };
+    if (err <= 0.005) return { pts: 35, tone: 'ok', tag: 'Correct', note: 'Right to the rounding. Exactly, it is ' + fTxt(want) + '.' };
+    if (err <= 0.02) return { pts: 26, tone: 'ok', tag: 'Correct', note: 'Close enough; the exact value is ' + fTxt(want) + '.' };
+    if (err <= 0.05) return { pts: 11, tone: 'mid', tag: 'Nearly', note: 'Slightly off. It is ' + fTxt(want) + '. That looks like arithmetic, not method.' };
+    return {
+      pts: 0, tone: 'no', tag: 'Not there',
+      note: diagnose(ans, want, other, r, askedFor) ||
+        'It is ' + fTxt(want) + '. Set the two ' + (askedFor === 'theirs' ? 'rows' : 'columns') + ' equal and solve.'
+    };
+  }
+
+  function gradeSolve(r, ansP, ansQ) {
+    const vp = gradeOne(ansP, r.sol.p, r.sol.q, r, 'mine');
+    const vq = gradeOne(ansQ, r.sol.q, r.sol.p, r, 'theirs');
+    r.scoreP = vp.pts; r.scoreQ = vq.pts;
+    r.vp = vp; r.vq = vq;
+    r.step = 2;
+
+    // Marks only, no values and no algebra. Handing back the correct q* on the
+    // same screen as the scouting report answers the next question for them,
+    // and a wrong threshold ought to lead somewhere visible.
+    host.innerHTML = stepsBar(2) + slimBar(r) + payoffTable(r) + markChip(r) +
+      (r.mode === 'exploit' ? stepDecision(r) : stepHold(r));
+    wireStep();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function markChip(r) {
+    const ok = function (v) { return v.pts >= 26; };
+    const one = function (v, sym) {
+      return '<span class="mark ' + (ok(v) ? 'y' : 'n') + '"><span class="num">' + sym + '</span>' +
+        (ok(v) ? '✓' : '✗') + '</span>';
+    };
+    return '<div class="markbar">' + one(r.vp, 'p*') + one(r.vq, 'q*') +
+      '<span class="markbar-note">Full working comes after you play.</span></div>';
+  }
+
+  function miniVerdict(v, sym, exact, who) {
+    return '<div class="mini ' + v.tone + '">' +
+      '<p class="mini-head"><span class="sym ' + who + '">' + sym + '</span> <b>' + esc(v.tag) + '</b> <span class="num">' + exact + '</span></p>' +
+      '<p class="mini-note">' + v.note + '</p></div>';
+  }
+
+  function verdictBlock(tone, tag, note) {
+    return '<div class="verdict ' + tone + '"><span class="tag">' + esc(tag) + '</span><p>' + note + '</p></div>';
+  }
+
+  function workQ(r) {
+    const g = r.g, s = r.sol;
+    const L0 = s.myRow0, L1 = s.myRow1;
+    const A = g.A;
+    const num = L1.c - L0.c, den = L0.m - L1.m;
+    const lines = [
+      '<h4><span class="sym them">q*</span> Their mix comes out of <em>your</em> payoffs: make yourself indifferent</h4>',
+      '<div class="wline"><span class="lbl">if you play </span><em>' + esc(g.me.actions[0].name) + '</em><span class="lbl">:  </span>' + rawTxt(A[0][0], A[0][1], 'q') + '  =  ' + linTxt(L0, 'q') + '</div>',
+      '<div class="wline"><span class="lbl">if you play </span><em>' + esc(g.me.actions[1].name) + '</em><span class="lbl">:  </span>' + rawTxt(A[1][0], A[1][1], 'q') + '  =  ' + linTxt(L1, 'q') + '</div>',
+      '<hr class="rule">',
+      '<div class="wline"><span class="lbl">set equal:  </span>' + linTxt(L0, 'q') + '  =  ' + linTxt(L1, 'q') + '</div>',
+      '<div class="wline concl"><span class="lbl">&rarr;  </span>q* = ' + numTxt(num) + '/' + numTxt(den) + ' = <em>' + fTxt(s.q) + '</em>  ≈ ' + s.q.pct() + '</div>'
+    ];
+    return '<div class="work">' + lines.join('') + '</div>';
+  }
+
+  function submitDecision(i) {
+    const r = R;
+    const correct = r.best === -1 || r.best === i;
+    r.scoreD = correct ? 40 : 0;
+    revealExploit(r, i, correct);
+  }
+
+  /* The result screen: outcome and the marked answers up front, the proof
+     behind three toggles. The working opens by itself only when something went
+     wrong, which is when anyone actually reads it. */
+  function tail(r, p) {
+    const wrong = r.scoreP < 26 || r.scoreQ < 26 || r.scoreD < 40;
+    const fold = function (label, inner, open) {
+      return '<details class="more"' + (open ? ' open' : '') + '><summary>' + label + '</summary>' +
+        '<div class="more-body">' + inner + '</div></details>';
+    };
+    return '<section class="reveal">' +
+      p.head + p.verdict +
+      '<div class="verdict-duo">' +
+      miniVerdict(r.vp, 'p*', fTxt(r.sol.p), 'you') +
+      miniVerdict(r.vq, 'q*', fTxt(r.sol.q), 'them') +
+      '</div>' +
+      (p.chart || '') +
+      fold('The working, line by line', p.work || '', wrong) +
+      fold('The 200-play run', p.sim || '', false) +
+      fold('Why this game is built the way it is', '<p class="aside">' + r.sc.twist + '</p>', false) +
+      '<div class="tally"><span>This drill <b class="num">+' + (r.scoreP + r.scoreQ + r.scoreD) + '</b> of 120, in <b class="num">' + mmss(clockFinal) + '</b></span>' +
+      '<button class="btn" id="next" type="button">Next drill</button></div>' +
+      '</section>';
+  }
+
+  function revealExploit(r, choice, correct) {
+    const g = r.g, s = r.sol, sc = r.sc;
+    const evs = [r.ev0, r.ev1];
+    const mine = evs[choice], alt = evs[1 - choice];
+
+    let tone, tag, note;
+    if (r.onEq) {
+      tone = 'mid'; tag = 'Indifferent';
+      note = esc(g.them.name) + ' is sitting <em>exactly</em> on their equilibrium mix, so both of your actions are worth precisely <strong class="num">' + fTxt(mine) + '</strong> ' + esc(sc.unit) + ' ' + esc(sc.per) + '. There was no right answer to find here, and that is the point. A correct mix leaves the other player nothing to exploit. You keep the points.';
+    } else if (correct) {
+      tone = 'ok'; tag = 'Best reply';
+      note = 'Against this opponent, ' + esc(g.me.actions[choice].name.toLowerCase()) + ' earns <strong class="num">' + fDec(mine) + '</strong> per play versus <strong class="num">' + fDec(alt) + '</strong> for the alternative. An edge of <strong class="num">' + fDec(mine.sub(alt)) + '</strong> every single time.';
+    } else {
+      tone = 'no'; tag = 'Exploitable';
+      note = esc(g.me.actions[choice].name) + ' earns <strong class="num">' + fDec(mine) + '</strong> per play. ' + esc(g.me.actions[1 - choice].name) + ' would have earned <strong class="num">' + fDec(alt) + '</strong>. You left <strong class="num">' + fDec(alt.sub(mine)) + '</strong> on the table each time.';
+    }
+
+    bank(r.scoreP + r.scoreQ + r.scoreD, correct && r.scoreP >= 26 && r.scoreQ >= 26);
+
+    const lit = [choice, r.oppMix.val() >= 0.5 ? 0 : 1];
+    const chart = envelopeChart({
+      lines: [
+        { y0: s.myRow0.c, y1: s.myRow0.m + s.myRow0.c, color: 'var(--you)' },
+        { y0: s.myRow1.c, y1: s.myRow1.m + s.myRow1.c, color: 'var(--them)' }
+      ],
+      star: s.q, starLabel: 'q* = ' + fTxt(s.q),
+      mark: r.oppMix, markLabel: 'they play ' + r.oppMix.pct(),
+      envelope: 'upper',
+      xLabel: 'q: how often ' + g.them.name + ' plays ' + g.them.actions[0].name.toLowerCase(),
+      alt: 'Your expected payoff from each action as a function of the opponent’s mix; the two lines cross at the equilibrium threshold.'
+    });
+
+    const sim = simulateExploit(r, choice);
+
+    host.innerHTML = stepsBar(3) + slimBar(r) + payoffTable(r, lit) + tail(r, {
+      head: sim.head,
+      verdict: verdictBlock(tone, tag, note),
+      sim: sim.body,
+      work: workQ(r) + workP(r) +
+      '<div class="work">' +
+      '<h4>Cashing the threshold in</h4>' +
+      '<div class="wline"><span class="lbl">they play </span><span class="th">' + esc(g.them.actions[0].name) + '</span><span class="lbl"> at q = </span>' + r.oppMix.txt() + '<span class="lbl">, and q* = </span>' + fTxt(s.q) +
+      '<span class="lbl">  →  </span>' + (r.onEq ? 'exactly on it' : (r.oppMix.gt(s.q) ? 'above the threshold' : 'below the threshold')) + '</div>' +
+      '<hr class="rule">' +
+      '<div class="wline"><em>' + esc(g.me.actions[0].name) + '</em><span class="lbl"> pays  </span>' + linTxt(s.myRow0, 'q') + '<span class="lbl"> at q=' + r.oppMix.txt() + '  =  </span>' + fTxt(r.ev0) + ' <span class="lbl">(' + fDec(r.ev0) + ')</span></div>' +
+      '<div class="wline"><em>' + esc(g.me.actions[1].name) + '</em><span class="lbl"> pays  </span>' + linTxt(s.myRow1, 'q') + '<span class="lbl"> at q=' + r.oppMix.txt() + '  =  </span>' + fTxt(r.ev1) + ' <span class="lbl">(' + fDec(r.ev1) + ')</span></div>' +
+      '<hr class="rule">' +
+      '<div class="wline concl"><span class="lbl">&rarr;  </span>' + (r.best === -1 ? 'a dead heat, play either' : 'play <em>' + esc(g.me.actions[r.best].name) + '</em>') + '</div>' +
+      '</div>',
+      chart: '<div class="chart">' +
+      '<p class="cap">Your expected payoff, in ' + esc(sc.unit) + ' ' + esc(sc.per) + ', against every mix they could play. Whichever line is higher at their actual mix is your move.</p>' +
+      chart +
+      '<div class="chart-legend">' +
+      '<span class="swatch"><i style="background:var(--you)"></i> you play ' + esc(g.me.actions[0].name.toLowerCase()) + '</span>' +
+      '<span class="swatch"><i style="background:var(--them)"></i> you play ' + esc(g.me.actions[1].name.toLowerCase()) + '</span>' +
+      '<span class="swatch"><i style="background:var(--ink-3)"></i> the threshold q*</span>' +
+      '</div></div>'
+    });
+    wireStep();
+  }
+
+  function simHead(won, text, detail) {
+    return '<p class="headline ' + (won ? 'win' : 'lose') + '">' +
+      esc(text) + ' <small>' + detail + '</small></p>';
+  }
+
+  // Running totals are in the game's own units, which are not always something
+  // you would add up 200 of. Chances-in-10 become goals.
+  function totalNum(sc, v) {
+    const d = sc.totalDiv || 1;
+    return d === 1 ? sig(v) : (v < 0 ? MINUS : '+') + (Math.abs(v) / d).toFixed(1);
+  }
+  function totalTxt(sc, v) { return totalNum(sc, v) + ' ' + (sc.totalUnit || sc.unit); }
+
+  function simulateExploit(r, choice) {
+    const N = 200, g = r.g, sc = r.sc;
+    const q = r.oppMix.val();
+    const tot = [0, 0];
+    for (let k = 0; k < N; k++) {
+      const j = Math.random() < q ? 0 : 1;
+      tot[0] += g.A[0][j];
+      tot[1] += g.A[1][j];
+    }
+    const mine = tot[choice], alt = tot[1 - choice];
+    const mx = Math.max(1, Math.abs(tot[0]), Math.abs(tot[1]));
+    const row = function (i) {
+      const v = tot[i], w = Math.round(Math.abs(v) / mx * 100);
+      return '<div class="sim-row">' +
+        '<span class="sim-label' + (i === choice ? ' me' : '') + '">' + esc(g.me.actions[i].name) + (i === choice ? ' ← you' : '') + '</span>' +
+        '<div class="bar"><i class="' + (v >= 0 ? 'pos' : 'neg') + '" style="width:' + w + '%"></i></div>' +
+        '<span class="sim-val">' + totalNum(sc, v) + '</span></div>';
+    };
+    const body = '<div class="sim">' +
+      '<h4 class="sim-head">' + N + ' plays, both actions against the identical draws · ' + esc(sc.totalUnit || sc.unit) + '</h4>' +
+      row(0) + row(1) +
+      '<p class="hint">Scoring both against one sequence of their moves isolates the strategy from the luck. A single play is still a coin toss; the edge only shows up over the run.</p>' +
+      '</div>';
+    const won = mine > alt;
+    let detail = totalTxt(sc, mine) + ' over ' + N + ' plays, against ' + totalTxt(sc, alt) + ' for the alternative.';
+    if (r.best !== -1 && (r.best === choice) !== won) {
+      detail += ' The run bucked the odds this time, though over a longer night it would not.';
+    }
+    return { body: body, head: simHead(won, won ? sc.stake.win : sc.stake.lose, detail) };
+  }
+
+  /* ----- Hold the Line ----- */
+
+  function meVsCol(g, j) { return linear(g.A[0][j], g.A[1][j]); }
+
+  function submitHold(choice) {
+    const r = R, g = r.g, s = r.sol, sc = r.sc;
+    const held = choice === 'mix';
+    const pi = held ? (r.best === -1 ? 0 : r.best) : parseInt(choice, 10);
+    const floor = int(r.pureFloor[pi]);            // what that pure line pays once they adapt
+    const V = s.value;                             // what p* is worth forever
+    const today = pi === 0 ? r.ev0 : r.ev1;        // what it pays before they adapt
+
+    r.scoreD = held ? 40 : 0;
+    let tone, tag, note;
+    if (held) {
+      tone = 'ok'; tag = 'Unexploitable';
+      note = 'You keep <strong class="num">' + fBoth(V) + '</strong> ' + esc(sc.unit) + ' ' + esc(sc.per) + ', and nothing ' + esc(g.them.name) + ' does changes it. They can know your mix and study it: p* leaves every reply worth exactly the same to them, so there is no punishing answer to find. That guarantee is the value of the game, and no other mix reaches it.';
+    } else {
+      tone = 'no'; tag = 'Read and punished';
+      const wrongToo = r.best !== -1 && pi !== r.best;
+      note = 'Against their current mix, ' + esc(g.me.actions[pi].name.toLowerCase()) + ' pays <strong class="num">' + fDec(today) + '</strong> a play' +
+        (wrongToo ? ', and it was not even the better of the two today (' + esc(g.me.actions[r.best].name.toLowerCase()) + ' paid <strong class="num">' + fDec(pi === 0 ? r.ev1 : r.ev0) + '</strong>). ' : '. ') +
+        'Either way a pure line is a standing invitation. Once ' + esc(g.them.name) + ' switches to <strong>' + esc(g.them.actions[r.pureFloorCol[pi]].name.toLowerCase()) + '</strong> and stays there, you are pinned at <strong class="num">' + fDec(floor) + '</strong> with nothing left to adjust, against the <strong class="num">' + fDec(V) + '</strong> that p* would have held.';
+    }
+    bank(r.scoreP + r.scoreQ + r.scoreD, held && r.scoreP >= 26 && r.scoreQ >= 26);
+    revealHold(r, held, pi, tone, tag, note);
+  }
+
+  function revealHold(r, held, pi, tone, tag, note) {
+    const g = r.g, s = r.sol, sc = r.sc;
+    const c0 = r.meVsCol[0], c1 = r.meVsCol[1];
+
+    const chart = envelopeChart({
+      lines: [
+        { y0: c0.c, y1: c0.m + c0.c, color: 'var(--them)' },
+        { y0: c1.c, y1: c1.m + c1.c, color: 'var(--ink-3)' }
+      ],
+      star: s.p, starLabel: 'p* = ' + fTxt(s.p),
+      mark: held ? s.p : (pi === 0 ? ONE : ZERO),
+      markLabel: held ? 'you held' : 'you went pure',
+      envelope: 'lower',
+      xLabel: 'p: how often you play ' + g.me.actions[0].name.toLowerCase(),
+      alt: 'Your payoff against each of their replies as a function of your own mix; the lower of the two is your guarantee, and it peaks at the equilibrium mix.'
+    });
+
+    const sim = simulateHold(r, held, pi);
+
+    host.innerHTML = stepsBar(3) + slimBar(r) + payoffTable(r) + tail(r, {
+      head: sim.head,
+      verdict: verdictBlock(tone, tag, note),
+      sim: sim.body,
+      work: workQ(r) + workP(r) + workValue(r),
+      chart: '<div class="chart">' +
+      '<p class="cap">What each of your mixes is worth against each of their two replies. They answer with whichever is worse for you, so the <strong>lower</strong> line is what you actually get, and it peaks in exactly one place.</p>' +
+      chart +
+      '<div class="chart-legend">' +
+      '<span class="swatch"><i style="background:var(--them)"></i> they reply ' + esc(g.them.actions[0].name.toLowerCase()) + '</span>' +
+      '<span class="swatch"><i style="background:var(--ink-3)"></i> they reply ' + esc(g.them.actions[1].name.toLowerCase()) + '</span>' +
+      '<span class="swatch"><i style="background:var(--you);opacity:.35"></i> your guarantee</span>' +
+      '</div></div>'
+    });
+    wireStep();
+  }
+
+  function workP(r) {
+    const g = r.g, s = r.sol, B = g.B;
+    const T0 = s.theirCol0, T1 = s.theirCol1;
+    const num = T1.c - T0.c, den = T0.m - T1.m;
+    return '<div class="work">' +
+      '<h4><span class="sym you">p*</span> Your mix comes out of <span class="th">' + esc(g.them.name) + '’s</span> payoffs: make <em>them</em> indifferent</h4>' +
+      '<div class="wline"><span class="lbl">their </span><span class="th">' + esc(g.them.actions[0].name) + '</span><span class="lbl"> pays them:  </span>' + rawTxt(B[0][0], B[1][0], 'p') + '  =  ' + linTxt(T0, 'p') + '</div>' +
+      '<div class="wline"><span class="lbl">their </span><span class="th">' + esc(g.them.actions[1].name) + '</span><span class="lbl"> pays them:  </span>' + rawTxt(B[0][1], B[1][1], 'p') + '  =  ' + linTxt(T1, 'p') + '</div>' +
+      '<hr class="rule">' +
+      '<div class="wline"><span class="lbl">set equal:  </span>' + linTxt(T0, 'p') + '  =  ' + linTxt(T1, 'p') + '</div>' +
+      '<div class="wline concl"><span class="lbl">&rarr;  </span>p* = ' + numTxt(num) + '/' + numTxt(den) + ' = <em>' + fTxt(s.p) + '</em>  ≈ ' + s.p.pct() + '</div>' +
+      '</div>';
+  }
+
+  function workValue(r) {
+    const g = r.g, s = r.sol, c0 = r.meVsCol[0], c1 = r.meVsCol[1];
+    return '<div class="work">' +
+      '<h4>What holding p* is worth, whatever they do about it</h4>' +
+      '<div class="wline"><span class="lbl">if they play </span><span class="th">' + esc(g.them.actions[0].name) + '</span><span class="lbl">:  </span>' + linTxt(c0, 'p') + '<span class="lbl"> at p*  =  </span>' + fTxt(evalLin(c0, s.p)) + '</div>' +
+      '<div class="wline"><span class="lbl">if they play </span><span class="th">' + esc(g.them.actions[1].name) + '</span><span class="lbl">:  </span>' + linTxt(c1, 'p') + '<span class="lbl"> at p*  =  </span>' + fTxt(evalLin(c1, s.p)) + '</div>' +
+      '<div class="wline concl"><span class="lbl">&rarr;  </span>identical, so they have no reply that helps them. The value is <em>' + fTxt(s.value) + '</em> ≈ ' + fDec(s.value) + '</div>' +
+      '</div>';
+  }
+
+  // The run that makes the point: they play their sloppy mix for the first
+  // stretch, then wise up. Mixing is priced against an opponent who adapts.
+  function simulateHold(r, held, pi) {
+    const N = 200, ADAPT = 50, g = r.g, sc = r.sc;
+    const q = r.oppMix.val(), pv = r.sol.p.val();
+    const bi = pi;
+    const punish = r.pureFloorCol[bi];
+    let pure = 0, mix = 0;
+    for (let k = 0; k < N; k++) {
+      const adapted = k >= ADAPT;
+      // going pure: readable, so once they adapt they simply answer it
+      pure += g.A[bi][adapted ? punish : (Math.random() < q ? 0 : 1)];
+      // holding p*: there is no reply that helps them, so theirs is arbitrary
+      const j = adapted ? (Math.random() < 0.5 ? 0 : 1) : (Math.random() < q ? 0 : 1);
+      mix += g.A[Math.random() < pv ? 0 : 1][j];
+    }
+    const mx = Math.max(1, Math.abs(pure), Math.abs(mix));
+    const bar = function (label, v, me) {
+      const w = Math.round(Math.abs(v) / mx * 100);
+      return '<div class="sim-row"><span class="sim-label' + (me ? ' me' : '') + '">' + label + '</span>' +
+        '<div class="bar"><i class="' + (v >= 0 ? 'pos' : 'neg') + '" style="width:' + w + '%"></i></div>' +
+        '<span class="sim-val">' + totalNum(sc, v) + '</span></div>';
+    };
+    const body = '<div class="sim">' +
+      '<h4 class="sim-head">' + N + ' plays, ' + esc(g.them.name) + ' wises up after the first ' + ADAPT + ' · ' + esc(sc.totalUnit || sc.unit) + '</h4>' +
+      bar('Pure ' + esc(g.me.actions[bi].name.toLowerCase()) + (held ? '' : ' ← you'), pure, !held) +
+      bar('Holding p* = ' + fTxt(r.sol.p) + (held ? ' ← you' : ''), mix, held) +
+      '<p class="hint">The pure line earns more than the mix for the first ' + ADAPT + ' plays, and that part is real. Then it gets answered, and it stays answered. The mix never spikes and never collapses.</p>' +
+      '</div>';
+    // Careful here: on the losing side of a game, playing perfectly still loses
+    // money -- just less of it. The headline is about holding, not about profit.
+    const detail = held
+      ? totalTxt(sc, mix) + ' held steady, against ' + totalTxt(sc, pure) + ' for the pure line once it was read.'
+      : totalTxt(sc, pure) + ' after they adapted, against ' + totalTxt(sc, mix) + ' for the mix you gave up.';
+    return {
+      body: body,
+      head: simHead(held, held ? 'You stayed unreadable.' : 'They read you and answered it.', detail)
+    };
+  }
+
+  /* =====================================================================
+     Wiring
+     ===================================================================== */
+
+  /* ----- per-drill clock: these are meant to take a minute, not an evening ----- */
+  let clockStart = 0, clockId = null, clockFinal = 0;
+
+  function mmss(ms) {
+    const s = Math.max(0, Math.round(ms / 1000));
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }
+  function paintClock() {
+    const el = document.getElementById('s-clock');
+    if (el) el.textContent = mmss(Date.now() - clockStart);
+  }
+  function startClock() {
+    clockStart = Date.now();
+    if (clockId) clearInterval(clockId);
+    clockId = setInterval(paintClock, 1000);
+    paintClock();
+  }
+  function stopClock() {
+    if (clockId) { clearInterval(clockId); clockId = null; }
+    clockFinal = Date.now() - clockStart;
+    paintClock();
+  }
+
+  function bank(points, clean) {
+    stopClock();
+    stats.score += points;
+    stats.drills += 1;
+    stats.streak = clean ? stats.streak + 1 : 0;
+    saveStats();
+    paintStats();
+  }
+
+  function deal() {
+    const scId = document.getElementById('sel-scenario').value;
+    const side = document.getElementById('sel-side').value;
+    const mode = document.getElementById('sel-mode').value;
+    R = newRound(scId, side, mode);
+    render();
+    startClock();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function fillSelects() {
+    const s1 = document.getElementById('sel-scenario');
+    s1.innerHTML = '<option value="any">Surprise me</option>' +
+      SCENARIOS.map(function (s) { return '<option value="' + s.id + '">' + esc(s.title) + '</option>'; }).join('');
+    const s2 = document.getElementById('sel-side');
+    s2.innerHTML = '<option value="any">Either side</option><option value="row">The first player</option><option value="col">The second player</option>';
+    const s3 = document.getElementById('sel-mode');
+    s3.innerHTML = '<option value="any">Either drill</option>' +
+      '<option value="exploit">' + esc(MODES.exploit.label) + '</option>' +
+      '<option value="defend">' + esc(MODES.defend.label) + '</option>';
+  }
+
+  function start() {
+    const problems = audit();
+    if (problems.length) {
+      host.innerHTML = '<div class="boot-error">These games are misspecified and would teach the wrong thing:<br>' +
+        problems.map(esc).join('<br>') + '</div>';
+      return;
+    }
+    fillSelects();
+    loadStats();
+    paintStats();
+    document.getElementById('btn-deal').addEventListener('click', deal);
+    ['sel-scenario', 'sel-side', 'sel-mode'].forEach(function (id) {
+      document.getElementById(id).addEventListener('change', deal);
+    });
+    deal();
+  }
+
+  if (window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(start);
+  else start();
+})();
+</script>
