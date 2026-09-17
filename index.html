@@ -70,29 +70,29 @@
     background: var(--bg);
     color: var(--ink);
     font-family: 'Libre Franklin', system-ui, sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 17px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3 { font-family: 'Zilla Slab', Georgia, serif; margin: 0; font-weight: 600; text-wrap: balance; }
   p { margin: 0; }
   .num { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
 
-  .wrap { max-width: 660px; margin: 0 auto; padding-inline: 18px; padding-block: 24px 56px; }
+  .wrap { max-width: 780px; margin: 0 auto; padding-inline: 20px; padding-block: 26px 64px; }
 
   /* ---------- masthead ---------- */
   .top { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
-  .top h1 { font-size: 21px; letter-spacing: -.01em; }
-  .hud { display: flex; gap: 16px; font-size: 12px; color: var(--ink-3); }
-  .hud b { color: var(--ink); font-size: 15px; font-weight: 600; }
-  .lede { color: var(--ink-2); font-size: 14px; max-width: 46ch; margin-bottom: 20px; }
+  .top h1 { font-size: 26px; letter-spacing: -.01em; }
+  .hud { display: flex; gap: 20px; font-size: 13px; color: var(--ink-3); }
+  .hud b { color: var(--ink); font-size: 21px; font-weight: 600; }
+  .lede { color: var(--ink-2); font-size: 16px; max-width: 48ch; margin-bottom: 22px; }
 
   /* ---------- game picker ---------- */
   .games { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
   .games button {
-    font: inherit; font-size: 12.5px; cursor: pointer; color: var(--ink-2);
+    font: inherit; font-size: 15px; cursor: pointer; color: var(--ink-2);
     background: transparent; border: 1px solid var(--line-2); border-radius: 100px;
-    padding: 5px 13px;
+    padding: 7px 17px;
   }
   .games button:hover { color: var(--ink); border-color: var(--ink-3); }
   .games button[aria-current="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); font-weight: 500; }
@@ -100,79 +100,125 @@
   /* ---------- card ---------- */
   .card {
     background: var(--card); border: 1px solid var(--line); border-radius: 6px;
-    padding: 22px; box-shadow: var(--lift);
+    padding: 26px; box-shadow: var(--lift);
   }
   .card + .card { margin-top: 14px; }
   .enter { animation: rise .32s cubic-bezier(.2,.7,.3,1) both; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
   .kicker {
-    font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
-    color: var(--ink-3); margin-bottom: 7px;
+    font-size: 12px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 8px;
   }
-  .setup { color: var(--ink-2); font-size: 14px; margin-bottom: 18px; max-width: 52ch; }
+  .setup { color: var(--ink-2); font-size: 16px; margin-bottom: 18px; max-width: 56ch; }
   .setup b { color: var(--ink); font-weight: 600; }
 
-  .q { font-size: 22px; line-height: 1.25; margin-bottom: 4px; }
-  .q-sub { color: var(--ink-2); font-size: 14px; margin-bottom: 18px; max-width: 50ch; }
+  .q { font-size: 30px; line-height: 1.2; margin-bottom: 6px; }
+  .q-sub { color: var(--ink-2); font-size: 16px; margin-bottom: 20px; max-width: 54ch; }
 
   /* ---------- payoff grid ---------- */
   .grid-wrap { overflow-x: auto; margin-bottom: 10px; }
-  table.grid { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 340px; }
+  table.grid { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 380px; }
   table.grid th, table.grid td { padding: 0; border: 1px solid var(--line); }
   table.grid thead th {
-    font: 600 12.5px 'Libre Franklin', sans-serif; color: var(--them);
-    padding: 8px 10px; text-align: left; background: var(--sunk); vertical-align: top;
+    font: 600 16px 'Libre Franklin', sans-serif; color: var(--them);
+    padding: 11px 13px; text-align: left; background: var(--sunk); vertical-align: top;
   }
   table.grid tbody th {
-    font: 600 12.5px 'Libre Franklin', sans-serif; color: var(--you);
-    padding: 8px 10px; text-align: left; background: var(--sunk); width: 30%; vertical-align: top;
+    font: 600 16px 'Libre Franklin', sans-serif; color: var(--you);
+    padding: 11px 13px; text-align: left; background: var(--sunk); width: 30%; vertical-align: top;
   }
-  table.grid .sub { display: block; font-weight: 400; font-size: 10.5px; color: var(--ink-3); margin-top: 1px; }
+  table.grid .sub { display: block; font-weight: 400; font-size: 12.5px; color: var(--ink-3); margin-top: 1px; }
   td.nw { background: var(--sunk); padding: 8px 10px !important; }
-  td.nw span { display: block; font-size: 10px; letter-spacing: .04em; white-space: nowrap; }
+  td.nw span { display: block; font-size: 12px; letter-spacing: .04em; white-space: nowrap; }
   td.nw .a { color: var(--them); text-align: right; }
   td.nw .b { color: var(--you); margin-top: 8px; }
 
-  td.box { height: 58px; cursor: pointer; position: relative; }
+  td.box { height: 84px; cursor: pointer; position: relative; }
   td.box .in { display: flex; align-items: center; justify-content: center; gap: 9px; height: 100%; }
-  td.box .mine  { color: var(--you);  font-size: 19px; font-weight: 600; }
-  td.box .yours { color: var(--them); font-size: 14px; }
+  td.box .mine  { color: var(--you);  font-size: 30px; font-weight: 600; }
+  td.box .yours { color: var(--them); font-size: 21px; }
   td.box .slash { color: var(--line-2); }
   td.box:hover, td.box.on { background: var(--you-bg); }
   td.box.lit { background: var(--you-bg); box-shadow: inset 0 0 0 2px var(--you); }
 
-  .key { font-size: 12px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 3px 14px; }
+  .key { font-size: 14px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 3px 14px; }
   .key i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 5px; }
   .read {
     margin-top: 10px; padding: 9px 12px; border-radius: 4px; background: var(--sunk);
-    font-size: 13px; color: var(--ink-2); min-height: 38px;
+    font-size: 15px; color: var(--ink-2); min-height: 42px;
   }
   .read b { color: var(--ink); font-weight: 600; }
+
+
+  /* ---------- the situation, drawn ---------- */
+  .scene { display: block; width: 100%; max-width: 430px; height: auto; margin: 0 auto 20px; }
+
+  /* ---------- a mix, shown as the rounds it actually produces ---------- */
+  .scout, .replay {
+    background: var(--sunk); border-radius: 5px; padding: 16px 18px; margin-bottom: 22px;
+  }
+  .scout-head {
+    font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 11px; font-weight: 600;
+  }
+  .scout-sum { font-size: 16px; color: var(--ink-2); margin-top: 11px; }
+  .scout-sum b { color: var(--ink); font-weight: 600; }
+  .replay-lab { font-size: 14px; color: var(--ink-2); margin: 12px 0 5px; font-weight: 500; }
+  .replay-lab:first-of-type { margin-top: 0; }
+
+  .tape { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tape i {
+    display: block; width: 20px; height: 30px; border-radius: 3px; flex: none;
+    animation: pop .25s ease both;
+  }
+  .tape i.a  { background: var(--you); }
+  .tape i.a2 { background: var(--card); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--you) 45%, transparent); }
+  .tape i.b  { background: var(--them); }
+  .tape i.b2 { background: var(--card); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--them) 45%, transparent); }
+  .tape i.cut { margin-left: 14px; position: relative; }
+  .tape i.cut::before {
+    content: ''; position: absolute; left: -9px; top: -4px; bottom: -4px;
+    border-left: 2px dashed var(--ink-3);
+  }
+  @keyframes pop { from { opacity: 0; transform: scale(.55); } to { opacity: 1; transform: none; } }
+  .tape i:nth-child(1){animation-delay:.00s}  .tape i:nth-child(2){animation-delay:.03s}
+  .tape i:nth-child(3){animation-delay:.06s}  .tape i:nth-child(4){animation-delay:.09s}
+  .tape i:nth-child(5){animation-delay:.12s}  .tape i:nth-child(6){animation-delay:.15s}
+  .tape i:nth-child(7){animation-delay:.18s}  .tape i:nth-child(8){animation-delay:.21s}
+  .tape i:nth-child(9){animation-delay:.24s}  .tape i:nth-child(10){animation-delay:.27s}
+  .tape i:nth-child(n+11){animation-delay:.30s}
+
+  .tape-key { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 11px; font-size: 15px; color: var(--ink-2); }
+  .tape-key i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; margin-right: 7px; vertical-align: -2px; }
+  .tape-key i.a  { background: var(--you); }
+  .tape-key i.a2 { background: var(--card); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--you) 45%, transparent); }
+  .tape-key i.b  { background: var(--them); }
+  .tape-key i.b2 { background: var(--card); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--them) 45%, transparent); }
 
   /* ---------- inputs ---------- */
   .asks { display: grid; gap: 16px; margin-bottom: 16px; }
   .ask { display: grid; gap: 7px; }
   .ask-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
   .tag {
-    font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 14px;
-    padding: 2px 8px; border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 17px;
+    padding: 3px 10px; border-radius: 3px;
   }
   .tag.you  { color: var(--you);  background: var(--you-bg); }
   .tag.them { color: var(--them); background: var(--them-bg); }
-  .ask-head strong { font-size: 15px; font-weight: 600; }
-  .ask-why { font-size: 13px; color: var(--ink-2); max-width: 52ch; }
+  .ask-head strong { font-size: 19px; font-weight: 600; }
+  .ask-why { font-size: 15px; color: var(--ink-2); max-width: 56ch; }
   input[type="text"] {
-    font: 500 17px 'IBM Plex Mono', monospace; color: var(--ink);
+    font: 500 24px 'IBM Plex Mono', monospace; color: var(--ink);
     background: var(--card); border: 1px solid var(--line-2); border-radius: 4px;
-    padding: 10px 12px; width: 100%; max-width: 190px;
+    padding: 12px 15px; width: 100%; max-width: 230px;
   }
   input[type="text"]:focus { outline: 2px solid var(--you); outline-offset: 1px; border-color: var(--you); }
 
   .btn {
-    font: 600 14px 'Libre Franklin', sans-serif; cursor: pointer;
+    font: 600 17px 'Libre Franklin', sans-serif; cursor: pointer;
     background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
-    border-radius: 4px; padding: 10px 20px;
+    border-radius: 4px; padding: 13px 26px;
   }
   .btn:hover { opacity: .88; }
   .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
@@ -185,12 +231,12 @@
   .bal { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 4px; }
   .bal + .bal { margin-top: 18px; }
   .bal-top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; margin-bottom: 12px; }
-  .bal-top .lbl { font-size: 13.5px; color: var(--ink-2); }
-  .bal-top .val { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 14px; }
+  .bal-top .lbl { font-size: 16px; color: var(--ink-2); }
+  .bal-top .val { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 19px; }
   .beam { display: grid; gap: 8px; }
   .beam-row { display: grid; grid-template-columns: minmax(78px, 26%) 1fr auto; gap: 11px; align-items: center; }
-  .beam-name { font-size: 13px; color: var(--ink-2); }
-  .beam-track { height: 26px; background: var(--sunk); border-radius: 3px; overflow: hidden; }
+  .beam-name { font-size: 16px; color: var(--ink-2); }
+  .beam-track { height: 34px; background: var(--sunk); border-radius: 3px; overflow: hidden; }
   .beam-fill {
     display: block; height: 100%; width: 0; border-radius: 3px;
     transition: width .75s cubic-bezier(.22,.75,.28,1);
@@ -200,12 +246,12 @@
   .beam-row:nth-child(2) .beam-fill { transition-delay: .12s; }
   .beam-val {
     font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;
-    font-size: 14px; font-weight: 600; min-width: 48px; text-align: right;
+    font-size: 19px; font-weight: 600; min-width: 62px; text-align: right;
     opacity: 0; transition: opacity .3s ease .6s;
   }
   .bal.go .beam-val { opacity: 1; }
   .verdict {
-    margin-top: 13px; padding: 10px 13px; border-radius: 4px; font-size: 13.5px;
+    margin-top: 15px; padding: 13px 16px; border-radius: 4px; font-size: 16px;
     border: 1px solid; opacity: 0; transform: translateY(4px);
     transition: opacity .35s ease .75s, transform .35s ease .75s;
   }
@@ -221,54 +267,58 @@
   .pick {
     font: inherit; text-align: left; cursor: pointer; color: var(--ink);
     background: var(--card); border: 1px solid var(--line-2); border-radius: 5px;
-    padding: 14px 16px; display: grid; gap: 2px;
+    padding: 18px 20px; display: grid; gap: 3px;
   }
   .pick:hover { border-color: var(--you); background: var(--you-bg); }
-  .pick b { font-family: 'Zilla Slab', serif; font-size: 17px; font-weight: 600; }
-  .pick span { font-size: 12.5px; color: var(--ink-3); }
+  .pick b { font-family: 'Zilla Slab', serif; font-size: 22px; font-weight: 600; }
+  .pick span { font-size: 15px; color: var(--ink-3); }
 
   /* ---------- result ---------- */
   .out { text-align: center; padding: 6px 0 2px; }
   .out .big {
-    font-family: 'Zilla Slab', serif; font-size: 40px; font-weight: 700; line-height: 1;
+    font-family: 'Zilla Slab', serif; font-size: 62px; font-weight: 700; line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   .out.win .big { color: var(--good); }
   .out.lose .big { color: var(--bad); }
-  .out .cap { font-size: 13.5px; color: var(--ink-2); margin-top: 7px; }
+  .out .cap { font-size: 16px; color: var(--ink-2); margin-top: 8px; }
   .race { display: grid; gap: 9px; margin: 18px 0 4px; }
-  .race-row { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; gap: 11px; align-items: center; font-size: 13px; }
+  .race-row { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; gap: 13px; align-items: center; font-size: 16px; }
   .race-row .who { color: var(--ink-2); }
   .race-row .who.me { color: var(--you); font-weight: 600; }
-  .race-track { height: 20px; background: var(--sunk); border-radius: 3px; overflow: hidden; }
+  .race-track { height: 26px; background: var(--sunk); border-radius: 3px; overflow: hidden; }
   .race-fill { display: block; height: 100%; width: 0; transition: width 1.1s cubic-bezier(.22,.75,.28,1); }
   .race-fill.pos { background: var(--good); }
   .race-fill.neg { background: var(--bad); }
-  .race-row .amt { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; font-size: 13.5px; min-width: 56px; text-align: right; }
+  .race-row .amt { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; font-size: 17px; min-width: 72px; text-align: right; }
 
-  .why { font-size: 14px; color: var(--ink-2); max-width: 54ch; }
+  .why { font-size: 17px; color: var(--ink-2); max-width: 58ch; }
   .why b { color: var(--ink); font-weight: 600; }
 
   details.fold { margin-top: 16px; }
-  details.fold summary { cursor: pointer; font-size: 13px; color: var(--ink-2); padding: 9px 0; border-top: 1px solid var(--line); }
+  details.fold summary { cursor: pointer; font-size: 15px; color: var(--ink-2); padding: 9px 0; border-top: 1px solid var(--line); }
   details.fold summary:hover { color: var(--ink); }
   .work {
     background: var(--sunk); border-radius: 4px; padding: 13px 15px; margin-top: 10px; overflow-x: auto;
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.8; white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace; font-size: 15px; line-height: 1.85; white-space: nowrap;
   }
   .work .d { color: var(--ink-3); }
   .work .me { color: var(--you); font-weight: 600; }
   .work .th { color: var(--them); font-weight: 600; }
   .work hr { border: 0; border-top: 1px solid var(--line-2); margin: 9px 0; }
 
-  .foot { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; font-size: 13px; color: var(--ink-2); }
+  .foot { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; font-size: 16px; color: var(--ink-2); }
 
   .boot { background: var(--bad-bg); color: var(--bad); border: 1px solid var(--bad); padding: 14px; border-radius: 4px; font-family: monospace; font-size: 13px; }
 
-  @media (max-width: 520px) {
-    .q { font-size: 19px; }
-    .out .big { font-size: 33px; }
-    .card { padding: 17px; }
+  @media (max-width: 560px) {
+    .q { font-size: 23px; }
+    .out .big { font-size: 44px; }
+    .card { padding: 18px; }
+    td.box { height: 68px; }
+    td.box .mine { font-size: 25px; }
+    td.box .yours { font-size: 18px; }
+    .tape i { width: 15px; height: 24px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -356,7 +406,7 @@
       totalDiv: 10,
       you: 'row',
       art: 'goal',
-      verb: { me: 'shoot', them: 'dive' },
+      verb: { me: 'shoot', them: 'dives' },
       short: { me: ['left', 'right'], them: ['left', 'right'] },
       you_: 'You',
       row: { name: 'You', actions: [
@@ -378,7 +428,7 @@
       unitShort: 'coins',
       you: 'row',
       art: 'coin',
-      verb: { me: 'call', them: 'show' },
+      verb: { me: 'call', them: 'shows' },
       short: { me: ['heads', 'tails'], them: ['heads', 'tails'] },
       row: { name: 'You', actions: [
         { name: 'Call heads', sub: 'pays 3 on a match' },
@@ -412,7 +462,7 @@
         '<path d="M160 22V140" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/>' +
         '<text x="90" y="62" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="17" font-weight="600" fill="var(--ink-2)">LEFT</text>' +
         '<text x="230" y="62" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="17" font-weight="600" fill="var(--ink-2)">RIGHT</text>' +
-        '<circle cx="' + (shot === 0 ? 90 : shot === 1 ? 230 : 160) + '" cy="' + (shot === undefined || shot === null ? 152 : 110) + '" r="10" fill="var(--you)"/>' +
+        '<circle cx="' + (shot === 0 ? 90 : shot === 1 ? 230 : 160) + '" cy="' + (shot === undefined || shot === null ? 146 : 108) + '" r="10" fill="var(--you)"/>' +
         '<text x="160" y="164" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="12" fill="var(--ink-3)">' +
         (shot === undefined || shot === null ? 'you kick from here' : 'the ball went there') + '</text>' +
         '</svg>';
@@ -428,7 +478,7 @@
     return '<svg class="scene" viewBox="0 0 320 168" role="img" aria-label="A coin showing heads or tails">' +
       face(86, 'H', shot === 0, dive === 0) + face(234, 'T', shot === 1, dive === 1) +
       '<text x="160" y="160" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="12" fill="var(--ink-3)">' +
-      (shot === undefined || shot === null ? 'solid ring = what you called, filled coin = what he showed' : 'dashed ring = your call, filled coin = his face') + '</text>' +
+      (shot === undefined || shot === null ? 'you call one, he sets one, match and you win' : 'dashed ring = your call, filled coin = his face') + '</text>' +
       '</svg>';
   }
 
@@ -446,7 +496,7 @@
     }).join('');
     return '<div class="tape">' + cells + '</div>';
   }
-  function tapeKey(g, side, names, seq) {
+  function tapeKey(side, names, seq) {
     const a = seq.filter(function (v) { return v === 0; }).length;
     return '<p class="tape-key"><span><i class="' + side + '"></i>' + esc(names[0]) + ' × ' + a + '</span>' +
       '<span><i class="' + side + '2"></i>' + esc(names[1]) + ' × ' + (seq.length - a) + '</span></p>';
@@ -566,6 +616,17 @@
     };
     r.ev = [at(s.mine[0], r.scout), at(s.mine[1], r.scout)];
     r.best = r.ev[0].eq(r.ev[1]) ? -1 : (r.ev[0].gt(r.ev[1]) ? 0 : 1);
+    // the run of rounds the student is shown as the scouting report, drawn so
+    // its actual tally matches the mix they are told about
+    r.watch = (function (mix, n) {
+      const want = Math.round(mix * n), seq = [];
+      for (let k = 0; k < n; k++) seq.push(k < want ? 0 : 1);
+      for (let k = seq.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        const t = seq[k]; seq[k] = seq[j]; seq[j] = t;
+      }
+      return seq;
+    })(r.scout.val(), 20);
     r.floor = [Math.min(g.A[0][0], g.A[0][1]), Math.min(g.A[1][0], g.A[1][1])];
     r.floorCol = [g.A[0][0] <= g.A[0][1] ? 0 : 1, g.A[1][0] <= g.A[1][1] ? 0 : 1];
     return r;
@@ -672,6 +733,7 @@
       '<section class="card enter">' +
       '<p class="kicker">' + esc(gm.name) + '</p>' +
       '<p class="setup">' + gm.setup + '</p>' +
+      art(gm) +
       gridHtml(r) +
       '</section>' +
       '<section class="card enter">' +
@@ -681,14 +743,14 @@
         : 'Every mixed equilibrium is built on one idea: pick the mix that leaves the other player with nothing to gain either way.') + '</p>' +
       '<div class="asks">' +
       '<div class="ask">' +
-      '<p class="ask-head"><span class="tag them">q*</span><strong>How often ' + esc(g.them.name) + ' plays ' + esc(g.them.actions[0].name.toLowerCase()) + '</strong></p>' +
+      '<p class="ask-head"><span class="tag them">q*</span><strong>How often ' + esc(g.them.name) + ' ' + esc(gm.verb.them) + ' ' + esc(gm.short.them[0]) + '</strong></p>' +
       '<p class="ask-why">The number where <b>' + esc(g.me.actions[0].name.toLowerCase()) + '</b> and <b>' + esc(g.me.actions[1].name.toLowerCase()) + '</b> pay you exactly the same. Above it one of them wins, below it the other does. That is how you know when to pounce.</p>' +
-      '<input type="text" id="inQ" autocomplete="off" placeholder="e.g. 1/3 or 33%">' +
+      '<input type="text" id="inQ" autocomplete="off" placeholder="e.g. 3/8">' +
       '</div>' +
       '<div class="ask">' +
-      '<p class="ask-head"><span class="tag you">p*</span><strong>How often you play ' + esc(g.me.actions[0].name.toLowerCase()) + '</strong></p>' +
+      '<p class="ask-head"><span class="tag you">p*</span><strong>How often you ' + esc(gm.verb.me) + ' ' + esc(gm.short.me[0]) + '</strong></p>' +
       '<p class="ask-why">The number where ' + esc(g.them.name) + '’s two options pay <b>them</b> the same. Play it and there is no move they can make to beat you, because nothing they do changes their own total.</p>' +
-      '<input type="text" id="inP" autocomplete="off" placeholder="e.g. 1/3 or 33%">' +
+      '<input type="text" id="inP" autocomplete="off" placeholder="e.g. 3/8">' +
       '</div>' +
       '</div>' +
       '<div class="btns"><button class="btn" id="check" type="button">Check them</button></div>' +
@@ -813,23 +875,36 @@
 
   function screenPlay(r) {
     const g = r.g, gm = r.gm;
+    const names = [g.them.actions[0].name, g.them.actions[1].name];
+    const a = r.watch.filter(function (v) { return v === 0; }).length;
+
+    // Their mix, shown as the run you actually watched rather than as a number.
+    const scout =
+      '<div class="scout">' +
+      '<p class="scout-head">What ' + esc(g.them.name) + ' did in her last ' + r.watch.length + ' rounds</p>' +
+      tape(r.watch, 'b') + tapeKey('b', names, r.watch) +
+      '<p class="scout-sum">' + esc(names[0]) + ' ' + a + ' times out of ' + r.watch.length +
+      ', so she is running at about <b class="num">' + r.scout.pct() + '</b>. Your q* said <b class="num">' + r.ansQ.pct() + '</b>.</p>' +
+      '</div>';
+
     let body;
     if (r.mode === 'read') {
-      body = '<h2 class="q">Which do you play?</h2>' +
-        '<p class="q-sub">Your q* said <b class="num">' + r.ansQ.pct() + '</b>. ' + esc(g.them.name) +
-        ' is actually at <b class="num">' + r.scout.pct() + '</b>, so one of your two options is now worth more than the other. Take it.</p>' +
+      body = scout +
+        '<h2 class="q">One round. Which do you play?</h2>' +
+        '<p class="q-sub">She is not sitting at q*, so your two options are no longer worth the same. One of them pays more against someone leaning this way.</p>' +
         '<div class="picks">' +
         [0, 1].map(function (i) {
           return '<button class="pick" type="button" data-act="' + i + '"><b>' + esc(g.me.actions[i].name) + '</b>' +
-            '<span>' + esc(g.me.actions[i].sub || ' ') + '</span></button>';
+            '<span>' + esc(g.me.actions[i].sub || '\u00a0') + '</span></button>';
         }).join('') + '</div>';
     } else {
-      body = '<h2 class="q">200 rounds. How do you play them?</h2>' +
-        '<p class="q-sub">' + esc(g.them.name) + ' is at <b class="num">' + r.scout.pct() + '</b> today, off balance and beatable. But they adapt: anything you repeat, they will answer.</p>' +
+      body = scout +
+        '<h2 class="q">200 rounds. How do you play them?</h2>' +
+        '<p class="q-sub"><b>She learns.</b> While you stay unpredictable she keeps mixing like this. But the moment you start repeating yourself she notices, and from then on she just plays the answer to it, every single round.</p>' +
         '<div class="picks">' +
-        '<button class="pick" type="button" data-hold="0"><b>' + esc(g.me.actions[0].name) + ', every time</b><span>Pick one side and hammer it.</span></button>' +
-        '<button class="pick" type="button" data-hold="1"><b>' + esc(g.me.actions[1].name) + ', every time</b><span>Pick one side and hammer it.</span></button>' +
-        '<button class="pick" type="button" data-hold="mix"><b>Stick to your p*</b><span>Mix at ' + r.ansP.pct() + ' and stay unreadable.</span></button>' +
+        '<button class="pick" type="button" data-hold="0"><b>' + esc(g.me.actions[0].name) + ', all 200</b><span>The same thing every round.</span></button>' +
+        '<button class="pick" type="button" data-hold="1"><b>' + esc(g.me.actions[1].name) + ', all 200</b><span>The same thing every round.</span></button>' +
+        '<button class="pick" type="button" data-hold="mix"><b>Mix at your p*</b><span>' + esc(g.me.actions[0].name) + ' about ' + r.ansP.pct() + ' of the time, ' + esc(g.me.actions[1].name.toLowerCase()) + ' the rest, in no pattern.</span></button>' +
         '</div>';
     }
     app.innerHTML =
@@ -896,18 +971,39 @@
     r.ptsD = held ? 40 : 0;
     bank(r.ptsP + r.ptsQ + r.ptsD, held && r.ptsP >= 28 && r.ptsQ >= 28);
 
-    const N = 200, ADAPT = 50, qv = r.scout.val(), pv = r.ansP.val();
+    const N = 200, ADAPT = 16, qv = r.scout.val(), pv = r.ansP.val();
     let pure = 0, mix = 0;
+    const youSeq = [], herSeq = [];
     for (let k = 0; k < N; k++) {
       const wise = k >= ADAPT;
-      pure += g.A[pi][wise ? r.floorCol[pi] : (Math.random() < qv ? 0 : 1)];
-      const j = wise ? (Math.random() < 0.5 ? 0 : 1) : (Math.random() < qv ? 0 : 1);
-      mix += g.A[Math.random() < pv ? 0 : 1][j];
+      // going pure: she works it out and simply answers it from then on
+      const herPure = wise ? r.floorCol[pi] : (Math.random() < qv ? 0 : 1);
+      pure += g.A[pi][herPure];
+      // mixing: there is no pattern to find, so she never settles
+      const youMix = Math.random() < pv ? 0 : 1;
+      const herMix = wise ? (Math.random() < 0.5 ? 0 : 1) : (Math.random() < qv ? 0 : 1);
+      mix += g.A[youMix][herMix];
+      if (k < 40) {
+        youSeq.push(held ? youMix : pi);
+        herSeq.push(held ? herMix : herPure);
+      }
     }
 
     const line = held
-      ? 'Nothing ' + esc(g.them.name) + ' tried made a dent, because at p* every reply pays them the same. You collected <b>' + fd(s.value) + '</b> a round the whole way through.'
-      : 'It worked for about 50 rounds. Then ' + esc(g.them.name) + ' switched to <b>' + esc(g.them.actions[r.floorCol[pi]].name.toLowerCase()) + '</b>, stayed there, and pinned you at <b>' + r.floor[pi] + '</b> a round with nothing left to change.';
+      ? 'There was no pattern for ' + esc(g.them.name) + ' to find, so she never settled on anything. And it would not have helped her: at p* both of her options pay her the same. You collected <b>' + fd(s.value) + '</b> a round the whole way through.'
+      : 'It worked at first. Then, around round ' + ADAPT + ', ' + esc(g.them.name) + ' spotted that you never change, switched to <b>' + esc(g.them.actions[r.floorCol[pi]].name.toLowerCase()) + '</b>, and stayed there. From that point you got <b>' + r.floor[pi] + '</b> a round with nothing left to change.';
+
+    // the two runs side by side: this is what "she adapts" actually looks like
+    const replay =
+      '<div class="replay">' +
+      '<p class="scout-head">The first 40 of the 200 rounds, one square each</p>' +
+      '<p class="replay-lab">You</p>' + tape(youSeq, 'a', ADAPT) +
+      '<p class="replay-lab">' + esc(g.them.name) + '</p>' + tape(herSeq, 'b', ADAPT) +
+      tapeKey('b', [g.them.actions[0].name, g.them.actions[1].name], herSeq) +
+      '<p class="scout-sum">' + (held
+        ? 'Both rows stay speckled the whole way. She cannot lock on to anything, because there is nothing there to lock on to.'
+        : 'Your row is one solid colour, which is the problem. At the dashed line her row goes solid too, and stays that way for the other ' + (200 - ADAPT) + ' rounds.') + '</p>' +
+      '</div>';
 
     result(r, {
       win: held,
@@ -919,6 +1015,7 @@
         { who: 'Mixing at p*' + (held ? ' (you)' : ''), v: mix, me: held }
       ],
       lit: null,
+      extra: replay,
       work: workLong(r)
     });
   }
@@ -940,6 +1037,7 @@
       '<div class="out ' + (o.win ? 'win' : 'lose') + '"><p class="big num" id="tick">0</p><p class="cap">' + o.cap + '</p></div>' +
       '<div class="race">' + races + '</div>' +
       '<p class="why" style="margin-top:16px">' + o.why + '</p>' +
+      (o.extra || '') +
       exact +
       '<details class="fold"><summary>Show the working</summary>' + o.work + '</details>' +
       '<div class="foot"><span>This round <b class="num">+' + (r.ptsP + r.ptsQ + r.ptsD) + '</b> of 120</span>' +
