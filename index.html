@@ -282,7 +282,16 @@
   .out.win .big { color: var(--good); }
   .out.lose .big { color: var(--bad); }
   .out .cap { font-size: 16px; color: var(--ink-2); margin-top: 8px; }
-  .race { display: grid; gap: 9px; margin: 18px 0 4px; }
+  .race-head {
+    font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600; margin: 20px 0 10px;
+  }
+  .race { display: grid; gap: 9px; margin: 0 0 4px; }
+  .race-row .pin {
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--good); background: var(--good-bg); border-radius: 3px;
+    padding: 2px 7px; margin-left: 8px; font-weight: 600; white-space: nowrap;
+  }
   .race-row { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; gap: 13px; align-items: center; font-size: 16px; }
   .race-row .who { color: var(--ink-2); }
   .race-row .who.me { color: var(--you); font-weight: 600; }
@@ -400,7 +409,7 @@
       id: 'penalty',
       tab: 'Penalty',
       name: 'Penalty Shootout',
-      setup: 'You take the kick. <b>Vesna</b> has to throw herself at one side of the goal <b>before</b> she can see where the ball is going, so you are both choosing at the same moment. Your right foot is strong, so shots to the <b>right</b> are fast and accurate. Shots to the <b>left</b> are weak and slow. Left and right are from where you are standing.',
+      setup: 'You take the kick. <b>Vesna</b> has to throw themselves at one side of the goal <b>before</b> they can see where the ball is going, so you are both choosing at the same moment. Your right foot is strong, so shots to the <b>right</b> are fast and accurate. Shots to the <b>left</b> are weak and slow. Left and right are from where you are standing.',
       unit: 'goals per 10 kicks',
       unitShort: 'goals',
       totalDiv: 10,
@@ -415,15 +424,21 @@
       col: { name: 'Vesna', actions: [
         { name: 'Dive left', sub: '' },
         { name: 'Dive right', sub: '' } ] },
-      A: [[2, 7], [9, 3]],
-      B: [[8, 3], [1, 7]],
-      note: 'Your right is so dangerous when she guesses wrong that Vesna has to dive right 7 times out of 11. That leaves your weak left side open often enough to be worth the worse shot, which is why you kick left slightly more than half the time.'
+      // A fresh grid each round, or you would just memorise 4/11 and 6/11.
+      // The bands keep the story true: an unguarded strong shot is the best
+      // outcome, a guessed weak shot the worst, so the game always cycles.
+      make: function () {
+        const R = function (lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); };
+        const A = [[R(1, 3), R(6, 8)], [R(8, 9), R(3, 5)]];
+        return { A: A, B: [[10 - A[0][0], 10 - A[0][1]], [10 - A[1][0], 10 - A[1][1]]] };
+      },
+      fallback: { A: [[2, 7], [9, 3]], B: [[8, 3], [1, 7]] }
     },
     {
       id: 'toss',
       tab: 'Coin call',
       name: 'The Loaded Toss',
-      setup: '<b>Deniz</b> slaps the coin down under his hand and can set which face is showing, so it is a choice, not a flip. You call out heads or tails at the same moment, before he lifts his hand. Match his face and you take the pot. The bookie pays more for a heads match than a tails match.',
+      setup: '<b>Deniz</b> slaps the coin down under one hand and can set which face is showing, so it is a choice, not a flip. You call out heads or tails at the same moment, before the hand comes up. Match the face and you take the pot. The bookie pays more for a heads match than a tails match.',
       unit: 'coins',
       unitShort: 'coins',
       you: 'row',
@@ -436,9 +451,16 @@
       col: { name: 'Deniz', actions: [
         { name: 'Shows heads', sub: '' },
         { name: 'Shows tails', sub: '' } ] },
-      A: [[3, -2], [-1, 1]],
-      B: [[-3, 2], [1, -1]],
-      note: 'The game is worth 1/7 of a coin a toss to you. A real edge, but a thin one, which is why the mix has to be exact. Drift a few percent and it is gone.'
+      make: function () {
+        const R = function (lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); };
+        const w = R(2, 4), x = R(1, 2), y = R(1, 3), z = R(1, 3);
+        return {
+          A: [[w, -y], [-z, x]],
+          B: [[-w, y], [z, -x]],
+          subs: { row: ['pays ' + w + ' on a match', 'pays ' + x + ' on a match'], col: ['', ''] }
+        };
+      },
+      fallback: { A: [[3, -2], [-1, 1]], B: [[-3, 2], [1, -1]], subs: { row: ['pays 3 on a match', 'pays 1 on a match'], col: ['', ''] } }
     }
   ];
 
@@ -478,7 +500,7 @@
     return '<svg class="scene" viewBox="0 0 320 168" role="img" aria-label="A coin showing heads or tails">' +
       face(86, 'H', shot === 0, dive === 0) + face(234, 'T', shot === 1, dive === 1) +
       '<text x="160" y="160" text-anchor="middle" font-family="\'Libre Franklin\',sans-serif" font-size="12" fill="var(--ink-3)">' +
-      (shot === undefined || shot === null ? 'you call one, he sets one, match and you win' : 'dashed ring = your call, filled coin = his face') + '</text>' +
+      (shot === undefined || shot === null ? 'you call one, they set one, match and you win' : 'dashed ring = your call, filled coin = their face') + '</text>' +
       '</svg>';
   }
 
@@ -504,13 +526,35 @@
 
   /* ================= solving ================= */
 
-  function seat(gm) {
-    if (gm.you === 'row') return { A: gm.A, B: gm.B, me: gm.row, them: gm.col };
+  function dress(who, subs) {
+    return { name: who.name, actions: who.actions.map(function (a, i) {
+      return { name: a.name, sub: subs ? subs[i] : a.sub };
+    }) };
+  }
+
+  function seat(gm, d) {
+    const su = d.subs || {};
+    if (gm.you === 'row') {
+      return { A: d.A, B: d.B, me: dress(gm.row, su.row), them: dress(gm.col, su.col) };
+    }
     return {
-      A: [[gm.B[0][0], gm.B[1][0]], [gm.B[0][1], gm.B[1][1]]],
-      B: [[gm.A[0][0], gm.A[1][0]], [gm.A[0][1], gm.A[1][1]]],
-      me: gm.col, them: gm.row
+      A: [[d.B[0][0], d.B[1][0]], [d.B[0][1], d.B[1][1]]],
+      B: [[d.A[0][0], d.A[1][0]], [d.A[0][1], d.A[1][1]]],
+      me: dress(gm.col, su.col), them: dress(gm.row, su.row)
     };
+  }
+
+  /* A drawn grid is only usable if it has no pure equilibrium and lands on
+     fractions worth practising: halves and whole numbers teach nothing, and
+     denominators past 20 are just cruel. */
+  function fresh(A, B) {
+    if (pureNE(A, B).length) return null;
+    let s;
+    try { s = solve(A, B); } catch (e) { return null; }
+    if (s.p.d < 3n || s.q.d < 3n) return null;
+    if (s.p.d > 20n || s.q.d > 20n) return null;
+    if (s.p.eq(s.q)) return null;
+    return s;
   }
 
   function pureNE(A, B) {
@@ -537,20 +581,23 @@
     };
   }
 
-  function constSum(gm) {
-    const s = gm.A[0][0] + gm.B[0][0];
-    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) if (gm.A[i][j] + gm.B[i][j] !== s) return null;
+  function constSum(d) {
+    const s = d.A[0][0] + d.B[0][0];
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) if (d.A[i][j] + d.B[i][j] !== s) return null;
     return s;
   }
 
   function audit() {
     const bad = [];
     GAMES.forEach(function (gm) {
-      try {
-        const g = seat(gm), s = solve(g.A, g.B);
-        if (s.pure.length) bad.push(gm.id + ': has a pure equilibrium');
-      } catch (e) { bad.push(gm.id + ': ' + e.message); }
-      gm.constSum = constSum(gm);
+      let ok = 0;
+      for (let t = 0; t < 300; t++) {
+        const d = gm.make(), g = seat(gm, d);
+        if (fresh(g.A, g.B)) ok++;
+      }
+      if (ok < 30) bad.push(gm.id + ': the grid generator almost never lands on a usable game (' + ok + ' of 300)');
+      const fb = seat(gm, gm.fallback);
+      if (!fresh(fb.A, fb.B)) bad.push(gm.id + ': the fallback grid is not usable');
     });
     return bad;
   }
@@ -608,10 +655,20 @@
 
   function newRound(id) {
     const gm = GAMES.find(function (x) { return x.id === id; }) || GAMES[0];
-    const g = seat(gm), s = solve(g.A, g.B);
-    const mode = gm.constSum === null ? 'read' : pick(['read', 'long']);
+    let d = null, g = null, s = null;
+    for (let t = 0; t < 400 && !s; t++) {
+      const cand = gm.make(), cg = seat(gm, cand), cs = fresh(cg.A, cg.B);
+      if (cs) { d = cand; g = cg; s = cs; }
+    }
+    if (!s) { d = gm.fallback; g = seat(gm, d); s = solve(g.A, g.B); }
+    const cs = constSum(d);
+    const mode = cs === null ? 'read' : pick(['read', 'long']);
     const r = {
-      gm: gm, g: g, s: s, mode: mode, tries: 0,
+      gm: gm, g: g, s: s, mode: mode, tries: 0, constSum: cs,
+      // Half the long rounds face an opponent who never adjusts. Against them,
+      // exploiting is right and mixing throws the edge away, so "the mix" stops
+      // being the automatic answer.
+      adapts: mode === 'long' ? Math.random() < 0.5 : false,
       scout: scoutMix(s.q), ptsP: 0, ptsQ: 0, ptsD: 0
     };
     r.ev = [at(s.mine[0], r.scout), at(s.mine[1], r.scout)];
@@ -881,30 +938,45 @@
     // Their mix, shown as the run you actually watched rather than as a number.
     const scout =
       '<div class="scout">' +
-      '<p class="scout-head">What ' + esc(g.them.name) + ' did in her last ' + r.watch.length + ' rounds</p>' +
+      '<p class="scout-head">What ' + esc(g.them.name) + ' did in their last ' + r.watch.length + ' rounds</p>' +
       tape(r.watch, 'b') + tapeKey('b', names, r.watch) +
       '<p class="scout-sum">' + esc(names[0]) + ' ' + a + ' times out of ' + r.watch.length +
-      ', so she is running at about <b class="num">' + r.scout.pct() + '</b>. Your q* said <b class="num">' + r.ansQ.pct() + '</b>.</p>' +
+      ', so they are running at about <b class="num">' + r.scout.pct() + '</b>. Your q* said <b class="num">' + r.ansQ.pct() + '</b>.</p>' +
       '</div>';
 
     let body;
     if (r.mode === 'read') {
       body = scout +
         '<h2 class="q">One round. Which do you play?</h2>' +
-        '<p class="q-sub">She is not sitting at q*, so your two options are no longer worth the same. One of them pays more against someone leaning this way.</p>' +
+        '<p class="q-sub">They are not sitting at q*, so your two options are no longer worth the same. One of them pays more against someone leaning this way.</p>' +
         '<div class="picks">' +
         [0, 1].map(function (i) {
           return '<button class="pick" type="button" data-act="' + i + '"><b>' + esc(g.me.actions[i].name) + '</b>' +
             '<span>' + esc(g.me.actions[i].sub || '\u00a0') + '</span></button>';
         }).join('') + '</div>';
     } else {
+      // Read the premise: it decides the answer. Against someone who adapts you
+      // need to be unreadable; against someone who never looks up, being
+      // unreadable buys you nothing and costs you the edge.
+      const premise = r.adapts
+        ? '<b>They study you.</b> They are watching for a pattern, and the moment you start repeating yourself they will play the answer to it, every round after that.'
+        : '<b>They never adjust.</b> They have played this way for years, they do not watch their opponents, and nothing you do will move them off it.';
+      const opts = [
+        { v: '0', t: esc(g.me.actions[0].name) + ', all 200', n: 'The same thing every round.' },
+        { v: '1', t: esc(g.me.actions[1].name) + ', all 200', n: 'The same thing every round.' },
+        { v: 'mix', t: 'Mix at your p*', n: esc(g.me.actions[0].name) + ' about ' + r.ansP.pct() + ' of the time, ' + esc(g.me.actions[1].name.toLowerCase()) + ' the rest, in no pattern.' }
+      ];
+      for (let k = opts.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        const t = opts[k]; opts[k] = opts[j]; opts[j] = t;
+      }
       body = scout +
         '<h2 class="q">200 rounds. How do you play them?</h2>' +
-        '<p class="q-sub"><b>She learns.</b> While you stay unpredictable she keeps mixing like this. But the moment you start repeating yourself she notices, and from then on she just plays the answer to it, every single round.</p>' +
+        '<p class="q-sub">' + premise + '</p>' +
         '<div class="picks">' +
-        '<button class="pick" type="button" data-hold="0"><b>' + esc(g.me.actions[0].name) + ', all 200</b><span>The same thing every round.</span></button>' +
-        '<button class="pick" type="button" data-hold="1"><b>' + esc(g.me.actions[1].name) + ', all 200</b><span>The same thing every round.</span></button>' +
-        '<button class="pick" type="button" data-hold="mix"><b>Mix at your p*</b><span>' + esc(g.me.actions[0].name) + ' about ' + r.ansP.pct() + ' of the time, ' + esc(g.me.actions[1].name.toLowerCase()) + ' the rest, in no pattern.</span></button>' +
+        opts.map(function (o) {
+          return '<button class="pick" type="button" data-hold="' + o.v + '"><b>' + o.t + '</b><span>' + o.n + '</span></button>';
+        }).join('') +
         '</div>';
     }
     app.innerHTML =
@@ -955,6 +1027,7 @@
       big: totalNum(gm, mine),
       cap: esc(gm.unitShort) + ' over 200 rounds',
       why: line,
+      raceHead: 'Both options, over the same 200 rounds against identical draws',
       race: [
         { who: g.me.actions[i].name + ' (you)', v: mine, me: true },
         { who: g.me.actions[1 - i].name, v: other, me: false }
@@ -968,50 +1041,71 @@
     const r = R, g = r.g, gm = r.gm, s = r.s;
     const held = choice === 'mix';
     const pi = held ? (r.best === -1 ? 0 : r.best) : parseInt(choice, 10);
-    r.ptsD = held ? 40 : 0;
-    bank(r.ptsP + r.ptsQ + r.ptsD, held && r.ptsP >= 28 && r.ptsQ >= 28);
+    const right = r.adapts ? held : (!held && (r.best === -1 || pi === r.best));
+    r.ptsD = right ? 40 : 0;
+    bank(r.ptsP + r.ptsQ + r.ptsD, right && r.ptsP >= 28 && r.ptsQ >= 28);
 
+    // Run all three options over the same 200 rounds. Showing only the one
+    // that was picked, next to the mix, hides whichever option was actually
+    // right and makes the chart argue against the explanation under it.
     const N = 200, ADAPT = 16, qv = r.scout.val(), pv = r.ansP.val();
-    let pure = 0, mix = 0;
+    const draw = function () { return Math.random() < qv ? 0 : 1; };
+    const pureTot = [0, 0];
+    let mix = 0;
     const youSeq = [], herSeq = [];
     for (let k = 0; k < N; k++) {
-      const wise = k >= ADAPT;
-      // going pure: she works it out and simply answers it from then on
-      const herPure = wise ? r.floorCol[pi] : (Math.random() < qv ? 0 : 1);
-      pure += g.A[pi][herPure];
-      // mixing: there is no pattern to find, so she never settles
-      const youMix = Math.random() < pv ? 0 : 1;
-      const herMix = wise ? (Math.random() < 0.5 ? 0 : 1) : (Math.random() < qv ? 0 : 1);
-      mix += g.A[youMix][herMix];
-      if (k < 40) {
-        youSeq.push(held ? youMix : pi);
-        herSeq.push(held ? herMix : herPure);
+      const wise = r.adapts && k >= ADAPT;
+      for (let i = 0; i < 2; i++) {
+        // going pure: an adapting opponent works it out and answers it
+        const them = wise ? r.floorCol[i] : draw();
+        pureTot[i] += g.A[i][them];
+        if (k < 40 && !held && i === pi) { youSeq.push(i); herSeq.push(them); }
       }
+      // mixing: there is no pattern to find, so they never settle
+      const youMix = Math.random() < pv ? 0 : 1;
+      const themMix = wise ? (Math.random() < 0.5 ? 0 : 1) : draw();
+      mix += g.A[youMix][themMix];
+      if (k < 40 && held) { youSeq.push(youMix); herSeq.push(themMix); }
+    }
+    const pure = pureTot[pi];
+
+    const bestEv = r.best === -1 ? r.ev[0] : r.ev[r.best];
+    let line;
+    if (r.adapts && held) {
+      line = 'There was no pattern for ' + esc(g.them.name) + ' to find, so they never settled on anything. And finding one would not have helped them: at p* both of their replies pay them the same. You collected <b>' + fd(s.value) + '</b> a round the whole way through.';
+    } else if (r.adapts) {
+      line = 'It worked at first. Then, around round ' + ADAPT + ', ' + esc(g.them.name) + ' spotted that you never change, switched to <b>' + esc(g.them.actions[r.floorCol[pi]].name.toLowerCase()) + '</b>, and stayed there. From that point you got <b>' + r.floor[pi] + '</b> a round with nothing left to change.';
+    } else if (held) {
+      line = 'p* is insurance against being read, and they were never going to read you. You paid for cover you did not need: <b>' + fd(s.value) + '</b> a round, when hammering <b>' + esc(g.me.actions[r.best === -1 ? 0 : r.best].name.toLowerCase()) + '</b> would have paid <b>' + fd(bestEv) + '</b> against a player who never adjusts.';
+    } else if (right) {
+      line = 'They never adjusted, so the better side kept paying <b>' + fd(r.ev[pi]) + '</b> a round for all 200. Mixing would have thrown part of that away by playing the weaker option some of the time.';
+    } else {
+      line = 'Going pure was right against someone who never adjusts, but you picked the wrong side. <b>' + esc(g.me.actions[1 - pi].name) + '</b> was paying <b>' + fd(r.ev[1 - pi]) + '</b> a round against them, not <b>' + fd(r.ev[pi]) + '</b>.';
     }
 
-    const line = held
-      ? 'There was no pattern for ' + esc(g.them.name) + ' to find, so she never settled on anything. And it would not have helped her: at p* both of her options pay her the same. You collected <b>' + fd(s.value) + '</b> a round the whole way through.'
-      : 'It worked at first. Then, around round ' + ADAPT + ', ' + esc(g.them.name) + ' spotted that you never change, switched to <b>' + esc(g.them.actions[r.floorCol[pi]].name.toLowerCase()) + '</b>, and stayed there. From that point you got <b>' + r.floor[pi] + '</b> a round with nothing left to change.';
-
-    // the two runs side by side: this is what "she adapts" actually looks like
+    // the two runs side by side: this is what "they adapt" actually looks like
     const replay =
       '<div class="replay">' +
       '<p class="scout-head">The first 40 of the 200 rounds, one square each</p>' +
-      '<p class="replay-lab">You</p>' + tape(youSeq, 'a', ADAPT) +
-      '<p class="replay-lab">' + esc(g.them.name) + '</p>' + tape(herSeq, 'b', ADAPT) +
+      '<p class="replay-lab">You</p>' + tape(youSeq, 'a', r.adapts ? ADAPT : undefined) +
+      '<p class="replay-lab">' + esc(g.them.name) + '</p>' + tape(herSeq, 'b', r.adapts ? ADAPT : undefined) +
       tapeKey('b', [g.them.actions[0].name, g.them.actions[1].name], herSeq) +
-      '<p class="scout-sum">' + (held
-        ? 'Both rows stay speckled the whole way. She cannot lock on to anything, because there is nothing there to lock on to.'
-        : 'Your row is one solid colour, which is the problem. At the dashed line her row goes solid too, and stays that way for the other ' + (200 - ADAPT) + ' rounds.') + '</p>' +
+      '<p class="scout-sum">' + (!r.adapts
+        ? 'Their row never changes, because they never look. A solid row of your own costs you nothing against an opponent like this.'
+        : (held
+          ? 'Both rows stay speckled the whole way. They cannot lock on to anything, because there is nothing there to lock on to.'
+          : 'Your row is one solid colour, which is the problem. At the dashed line their row goes solid too, and stays that way for the other ' + (200 - ADAPT) + ' rounds.')) + '</p>' +
       '</div>';
 
     result(r, {
-      win: held,
+      win: right,
       big: totalNum(gm, held ? mix : pure),
       cap: esc(gm.unitShort) + ' over 200 rounds',
       why: line,
+      raceHead: 'All three, over the same 200 rounds',
       race: [
-        { who: 'Pure ' + g.me.actions[pi].name.toLowerCase() + (held ? '' : ' (you)'), v: pure, me: !held },
+        { who: 'Always ' + g.me.actions[0].name.toLowerCase() + (!held && pi === 0 ? ' (you)' : ''), v: pureTot[0], me: !held && pi === 0 },
+        { who: 'Always ' + g.me.actions[1].name.toLowerCase() + (!held && pi === 1 ? ' (you)' : ''), v: pureTot[1], me: !held && pi === 1 },
         { who: 'Mixing at p*' + (held ? ' (you)' : ''), v: mix, me: held }
       ],
       lit: null,
@@ -1023,8 +1117,10 @@
   function result(r, o) {
     const gm = r.gm, s = r.s;
     const mx = Math.max.apply(null, o.race.map(function (x) { return Math.abs(x.v); })) || 1;
+    const top = Math.max.apply(null, o.race.map(function (x) { return x.v; }));
     const races = o.race.map(function (x) {
-      return '<div class="race-row"><span class="who' + (x.me ? ' me' : '') + '">' + esc(x.who) + '</span>' +
+      return '<div class="race-row"><span class="who' + (x.me ? ' me' : '') + '">' + esc(x.who) +
+        (x.v === top ? '<b class="pin">best</b>' : '') + '</span>' +
         '<div class="race-track"><span class="race-fill ' + (x.v >= 0 ? 'pos' : 'neg') + '" data-w="' + (Math.abs(x.v) / mx * 100).toFixed(1) + '"></span></div>' +
         '<span class="amt">' + totalNum(gm, x.v) + '</span></div>';
     }).join('');
@@ -1035,6 +1131,7 @@
       '<section class="card enter"><p class="kicker">' + esc(gm.name) + '</p>' + gridHtml(r, o.lit) + '</section>' +
       '<section class="card enter">' +
       '<div class="out ' + (o.win ? 'win' : 'lose') + '"><p class="big num" id="tick">0</p><p class="cap">' + o.cap + '</p></div>' +
+      (o.raceHead ? '<p class="race-head">' + esc(o.raceHead) + '</p>' : '') +
       '<div class="race">' + races + '</div>' +
       '<p class="why" style="margin-top:16px">' + o.why + '</p>' +
       (o.extra || '') +
